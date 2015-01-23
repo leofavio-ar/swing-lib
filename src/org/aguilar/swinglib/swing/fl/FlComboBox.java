@@ -17,8 +17,6 @@ import javax.swing.SwingUtilities;
 /**
  *
  * @author Leo Aguilar
- * Trébol Informatica
- * http://www.trebolinformatica.com.mx
  */
 public class FlComboBox extends JComboBox {
 

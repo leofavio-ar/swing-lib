@@ -63,6 +63,7 @@ public class FaderAWT extends Timer {
     }
     public void start() {
         Thread t = new Thread(new Runnable() {
+            @Override
             public void run() {
                 schedule(new TimerTask() {
                     @Override
@@ -70,15 +71,16 @@ public class FaderAWT extends Timer {
 //                        System.out.println(dialog.getOpacity());
                         switch(fadeType) {
                             case FADE_IN:
-                                if (aux + step < 1.0f)
+                                if (aux + step < 1.0f) {
                                     dialog.setOpacity(aux += step);
-                                else
+                                } else {
                                     end();
+                                }
                                 break;
                             case FADE_OUT:
-                                if (aux - step > 0.0f)
+                                if (aux - step > 0.0f) {
                                     dialog.setOpacity(aux -= step);
-                                else {
+                                } else {
                                     end();
                                     dialog.dispose();
                                 }

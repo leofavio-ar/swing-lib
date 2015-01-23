@@ -36,8 +36,9 @@ public class ArrayCollection extends ArrayList implements Serializable {
     @Override
     public String toString() {
         String string = "{";
-        for (int i = 0; i < size(); i ++)
+        for (int i = 0; i < size(); i ++) {
             string += get(i).toString() + (i == size() - 1 ? "" : ", ");
+        }
         string += "}";
         return string;
     }

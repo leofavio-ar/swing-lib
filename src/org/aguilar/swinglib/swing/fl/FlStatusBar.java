@@ -11,8 +11,6 @@ import javax.swing.Timer;
 /**
  *
  * @author Leo Aguilar
- * Trébol Informatica
- * http://trebolinformatica.com.mx
  */
 public class FlStatusBar extends JToolBar {
 

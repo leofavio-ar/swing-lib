@@ -26,6 +26,7 @@ public class Fader extends Timer {
     private float step;
     private float aux;
     Runnable runnable = new Runnable() {
+        @Override
         public void run() {
             start();
         }
@@ -45,18 +46,20 @@ public class Fader extends Timer {
     }
     private void addTimerActionListener() {
         addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 switch(fadeType) {
                     case FADE_IN:
-                        if (aux + step < 1.0f)
+                        if (aux + step < 1.0f) {
                             dialog.setOpacity(aux += step);
-                        else
+                        } else {
                             stop();
+                        }
                         break;
                     case FADE_OUT:
-                        if (aux - step > 0.0f)
+                        if (aux - step > 0.0f) {
                             dialog.setOpacity(aux -= step);
-                        else {
+                        } else {
                             stop();
                             dialog.dispose();
                         }

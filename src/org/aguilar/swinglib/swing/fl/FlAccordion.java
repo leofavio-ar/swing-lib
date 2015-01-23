@@ -13,7 +13,7 @@ import org.aguilar.swinglib.swing.misc.BarInfo;
 
 /**
  *
- * @author I.S.C. Leonardo Favio Aguilar Ramírez [Leo Aguilar]
+ * @author Leo Aguilar
  */
 
 public class FlAccordion extends JPanel implements ActionListener {

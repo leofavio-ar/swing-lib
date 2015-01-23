@@ -27,9 +27,7 @@ import javax.swing.text.JTextComponent;
 
 /**
  *
- * @author Trébol Informática
- * http://www.trebolinformatica.com.mx
- *
+ * @author Leo Aguilar
  */
 public class TextFieldAutoCompleter {
 

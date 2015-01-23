@@ -24,8 +24,6 @@ import org.aguilar.swinglib.validator.StringValidator;
 /**
  *
  * @author Leo Aguilar
- * Trébol Informatica
- * http://trebolinformatica.com.mx
  */
 public class FlStringField extends JTextField {
 
@@ -52,7 +50,6 @@ public class FlStringField extends JTextField {
     private Map control;
     
     private TextFieldAutoCompleter actf;
-//    private PlaceHolder prompt;
     private DecimalFormat dec = new DecimalFormat("#0.00");
     private StringValidator validator;
     private final FocusAdapter selectAllAdapter = new FocusAdapter() {
@@ -269,20 +266,6 @@ public class FlStringField extends JTextField {
     public TextFieldAutoCompleter getActf() {
         return actf;
     }
-//    public void addPlaceHolder(String prompText) {
-//        addPlaceHolder(promptText, null);
-//    }
-//    public void addPlaceHolder(String promptText, ImageIcon promptIcon) {
-//        if (prompt == null) {
-//            prompt = new PlaceHolder(this);
-//        }
-//        prompt.setText(promptText);
-//        prompt.setIcon(promptIcon);
-//        prompt.cambiarAlfa(0.7f);
-//    }
-//    public void setPlaceHolderFontStyle(int style) {
-//        prompt.cambiarEstilo(style);
-//    }
     public void setValidation() {
         setValidation(required, onlyDigits, minLength, maxLength, requiredErrorMessage, tooShortErrorMessage, invalidNumberErrorMessage);
     }
@@ -337,6 +320,18 @@ public class FlStringField extends JTextField {
             g.setFont(prev);
             g.setColor(prevColor);
         }
+    }
+    
+    public static void main(String[] args) {
+        javax.swing.JFrame frame = new javax.swing.JFrame();
+        FlStringField field = new FlStringField();
+        frame.setSize(500, 500);
+        field.setPlaceHolderText("escribe algo...");
+        field.setPlaceHolderIcon(new ImageIcon(FlStringField.class.getResource("/img/px24/help.png")));
+        field.setPlaceHolderGap(10);
+        frame.add(field);
+        frame.pack();
+        frame.setVisible(true);
     }
 
 }

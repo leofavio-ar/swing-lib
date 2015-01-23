@@ -1,11 +1,5 @@
 package org.aguilar.swinglib.swing.fl;
 
-/**
- *
- * @author Leo Aguilar
- * Trébol Informatica
- * http://trebolinformatica.com.mx
- */
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -28,6 +22,10 @@ import javax.swing.JInternalFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
+/**
+ *
+ * @author Leo Aguilar
+ */
 public class FlDesktopPane extends JDesktopPane {
 
     private static final long serialVersionUID = -5746013654602797327L;

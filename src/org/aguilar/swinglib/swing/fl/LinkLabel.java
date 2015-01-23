@@ -20,7 +20,7 @@ import org.aguilar.swinglib.utils.ColorUtils;
 
 /**
  *
- * @author I.S.C. Leonardo Favio Aguilar Ramírez [Leo Aguilar]
+ * @author Leo Aguilar
  */
 
 public class LinkLabel extends JLabel implements MouseListener {

@@ -30,8 +30,6 @@ import org.aguilar.swinglib.utils.methods.AbstractCommand;
 /**
  *
  * @author Leo Aguilar
- * 
- * 
  */
 public class FlTable extends JTable {
 

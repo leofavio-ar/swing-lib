@@ -13,8 +13,6 @@ import javax.swing.SwingUtilities;
 /**
  *
  * @author Leo Aguilar
- * Trébol Informatica
- * http://trebolinformatica.com.mx
  */
 public class FlInternalFrame extends JInternalFrame {
 

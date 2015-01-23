@@ -19,7 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 /**
- * A label that draws a drop shadow around each character it displays.
+ * 
  * @author Leo Aguilar
  */
 public class DropShadowLabel extends JLabel {
