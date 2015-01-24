@@ -12,7 +12,6 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.net.URL;
-
 import javax.swing.Action;
 import javax.swing.ButtonModel;
 import javax.swing.Icon;
@@ -71,8 +70,9 @@ public class LinkButton extends JButton {
         linkColor = Color.blue;
         colorPressed = Color.red;
         visitedLinkColor = new Color(128, 0, 128);
-        if (text == null && url != null)
+        if (text == null && url != null) {
           setText(url.toExternalForm());
+        }
         setLinkURL(url);
         setCursor(Cursor.getPredefinedCursor(12));
         setBorderPainted(false);
@@ -93,8 +93,9 @@ public class LinkButton extends JButton {
     }
     protected void setupToolTipText() {
         String tip = null;
-        if (buttonURL != null)
+        if (buttonURL != null) {
           tip = buttonURL.toExternalForm();
+        }
         setToolTipText(tip);
     }
     public void setLinkBehavior(int bnew) {
@@ -105,10 +106,11 @@ public class LinkButton extends JButton {
         repaint();
     }
     private void checkLinkBehavior(int behavior) {
-        if (behavior != ALWAYS_UNDERLINE && behavior != HOVER_UNDERLINE && behavior != NEVER_UNDERLINE && behavior != SYSTEM_DEFAULT)
+        if (behavior != ALWAYS_UNDERLINE && behavior != HOVER_UNDERLINE && behavior != NEVER_UNDERLINE && behavior != SYSTEM_DEFAULT) {
             throw new IllegalArgumentException("Not a legal LinkBehavior");
-        else
+        } else {
             return;
+        }
     }
     public int getLinkBehavior() {
         return linkBehavior;
