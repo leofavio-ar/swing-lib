@@ -43,17 +43,6 @@ public class LinkButton extends JButton {
     private Action defaultAction;
     private boolean isLinkVisited;
 
-    public static void main(String[] a) {
-        JFrame f = new JFrame();
-        LinkButton button1 = new LinkButton("TEXTO DE PRUEBA");
-        button1.setLinkColor(UIManager.getColor("Label.foreground"));
-        f.getContentPane().setLayout(new GridLayout(0,2));
-        f.getContentPane().add(button1);
-        f.getContentPane().add(new LinkButton("www.java2s.com/ExampleCode/CatalogExampleCode.htm"));
-        f.setSize(600, 200);
-        f.setDefaultCloseOperation(3);
-        f.setVisible(true);
-    }
     public LinkButton() {
         this(null, null, null);
     }
@@ -192,14 +181,15 @@ public class LinkButton extends JButton {
     @Override
     protected String paramString() {
         String str;
-        if (linkBehavior == ALWAYS_UNDERLINE)
+        if (linkBehavior == ALWAYS_UNDERLINE) {
             str = "ALWAYS_UNDERLINE";
-        else if (linkBehavior == HOVER_UNDERLINE)
+        } else if (linkBehavior == HOVER_UNDERLINE) {
             str = "HOVER_UNDERLINE";
-        else if (linkBehavior == NEVER_UNDERLINE)
+        } else if (linkBehavior == NEVER_UNDERLINE) {
             str = "NEVER_UNDERLINE";
-        else
+        } else {
             str = "SYSTEM_DEFAULT";
+        }
         String colorStr = linkColor == null ? "" : linkColor.toString();
         String colorPressStr = colorPressed == null ? "" : colorPressed.toString();
         String disabledLinkColorStr = disabledLinkColor == null ? "" : disabledLinkColor.toString();
@@ -232,25 +222,31 @@ class BasicLinkButtonUI extends MetalButtonUI {
         Color color = linkButton.getForeground();
         Object obj = null;
         if (bnModel.isEnabled()) {
-            if (bnModel.isPressed())
+            if (bnModel.isPressed()) {
                 linkButton.setForeground(linkButton.getActiveLinkColor());
-            else if (linkButton.isLinkVisited())
+            } else if (linkButton.isLinkVisited()) {
                 linkButton.setForeground(linkButton.getVisitedLinkColor());
-            else
+            } else {
                 linkButton.setForeground(linkButton.getLinkColor());
-        } else
-            if (linkButton.getDisabledLinkColor() != null)
+            }
+        } else {
+            if (linkButton.getDisabledLinkColor() != null) {
                 linkButton.setForeground(linkButton.getDisabledLinkColor());
+            }
+        }
         super.paintText(g, c, rect, s);
         int behavior = linkButton.getLinkBehavior();
         boolean drawLine = false;
         if (behavior == LinkButton.HOVER_UNDERLINE) {
-            if (bnModel.isRollover())
+            if (bnModel.isRollover()) {
                 drawLine = true;
-        } else if (behavior == LinkButton.ALWAYS_UNDERLINE || behavior == LinkButton.SYSTEM_DEFAULT)
+            }
+        } else if (behavior == LinkButton.ALWAYS_UNDERLINE || behavior == LinkButton.SYSTEM_DEFAULT) {
             drawLine = true;
-        if (!drawLine)
+        }
+        if (!drawLine) {
             return;
+        }
         FontMetrics fm = g.getFontMetrics();
         int x = rect.x + getTextShiftOffset();
         int y = (rect.y + fm.getAscent() + fm.getDescent() + getTextShiftOffset()) - 1;
@@ -263,4 +259,16 @@ class BasicLinkButtonUI extends MetalButtonUI {
         }
     }
 
+    public static void main(String[] a) {
+        JFrame f = new JFrame();
+        LinkButton button1 = new LinkButton("TEXTO DE PRUEBA");
+        button1.setLinkColor(UIManager.getColor("Label.foreground"));
+        f.getContentPane().setLayout(new GridLayout(0,2));
+        f.getContentPane().add(button1);
+        f.getContentPane().add(new LinkButton("www.java2s.com/ExampleCode/CatalogExampleCode.htm"));
+        f.setSize(600, 200);
+        f.setDefaultCloseOperation(3);
+        f.setVisible(true);
+    }
+    
 }
