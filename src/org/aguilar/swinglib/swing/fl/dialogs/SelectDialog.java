@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 public class SelectDialog extends javax.swing.JDialog {
 
     private boolean ok = false;
+    private int estado;
     private Map registro;
     private String columna;
     
@@ -26,10 +27,10 @@ public class SelectDialog extends javax.swing.JDialog {
      */
     public SelectDialog(ArrayList<Map> datos, String columna, String encabezado) {
         super(new JFrame(), true);
+        initComponents();
         this.columna = columna;
         registro = new HashMap();
         llenarTabla(datos, new String[] {columna}, new String[] {encabezado});
-        initComponents();
         this.setIconImage(new ImageIcon(this.getClass().getResource("/img/px16/list.png")).getImage());
         this.getContentPane().setBackground(Color.white);
         this.setLocationRelativeTo(null);
@@ -38,7 +39,7 @@ public class SelectDialog extends javax.swing.JDialog {
         return SelectDialog.crear(datos, columna, columna);
     }
     public static Map crear(ArrayList<Map> datos, String columna, String encabezado) {
-        SelectDialog sel = new SelectDialog(datos, columna, columna);
+        SelectDialog sel = new SelectDialog(datos, columna, encabezado);
         sel.setVisible(true);
         return sel.getRegistro();
     }

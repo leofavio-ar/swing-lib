@@ -298,6 +298,9 @@ public class FlTable extends JTable {
         dataProvider.remove(convertRowIndexToModel(row));
         ((CustomTableModel)getModel()).removeRow(convertRowIndexToModel(row));
     }
+    public void removeSelectedRow() {
+        removeRow(this.getSelectedRow());
+    }
     public Map getRow(int row) {
         if (dataProvider == null) {
             throw new NullPointerException("El proveedor de datos no ha sido inicializado");

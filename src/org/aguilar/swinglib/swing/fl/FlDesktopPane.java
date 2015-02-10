@@ -36,26 +36,26 @@ public class FlDesktopPane extends JDesktopPane {
 //    public static final int STRETCH = 1;
 //    public static final int TILE = 2;
     private static int FRAME_OFFSET = 20;
-    private MDIDesktopManager manager;
+    private FlDesktopManager manager;
     private final List<MaximizeListener> maxListeners = new ArrayList<MaximizeListener>();
     private Image image;
     private SizeMode imageSizeMode = SizeMode.NORMAL;
     private Map sizes = new LinkedHashMap();
 
     public FlDesktopPane() {
-        manager = new MDIDesktopManager();
+        manager = new FlDesktopManager();
         setDesktopManager(manager);
     }
     public FlDesktopPane(String imagePath) {
         if (imagePath != null)
             image = new ImageIcon(getClass().getResource(imagePath)).getImage();
-        manager = new MDIDesktopManager();
+        manager = new FlDesktopManager();
         setDesktopManager(manager);
     }
     public FlDesktopPane(Image image) {
         if (image != null)
             this.image = image;
-        manager = new MDIDesktopManager();
+        manager = new FlDesktopManager();
         setDesktopManager(manager);
     }
     public void setImage(Image image) {
@@ -182,11 +182,11 @@ public class FlDesktopPane extends JDesktopPane {
      * Private class used to replace the standard DesktopManager for JDesktopPane. Used to provide
      * scrollbar functionality.
      */
-    private class MDIDesktopManager extends DefaultDesktopManager {
+    private class FlDesktopManager extends DefaultDesktopManager {
 
         private static final long serialVersionUID = 5570342469190180173L;
 
-        public MDIDesktopManager() {
+        public FlDesktopManager() {
         }
         @Override
         public void maximizeFrame(JInternalFrame f) {
