@@ -6,61 +6,74 @@ package org.aguilar.swinglib.swing.fl.dialogs;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.ListSelectionModel;
+import org.aguilar.swinglib.utils.HotKeys;
 
 /**
  *
  * @author I.S.C. Leonardo Aguilar
  */
-public class SelectDialog extends javax.swing.JDialog {
+public class FlSelectDialog extends javax.swing.JDialog {
 
     private boolean ok = false;
-    private int estado;
-    private Map registro;
+    private boolean seleccionMultiple;
+    private List<Map> seleccionado;
     private String columna;
+    private HotKeys hotKeys;
     
     /**
      * Creates new form Seleccion
      */
-    public SelectDialog(ArrayList<Map> datos, String columna, String encabezado) {
+    public FlSelectDialog(ArrayList<Map> datos, String columna, String encabezado, boolean seleccionMultiple) {
         super(new JFrame(), true);
         initComponents();
+        hotKeys = new HotKeys(this);
+        hotKeys.agregarAccion(HotKeys.KS_ESC, "cerrar", "cerrar");
         this.columna = columna;
-        registro = new HashMap();
+        this.seleccionMultiple = seleccionMultiple;
+        seleccionado = new ArrayList<>();
         llenarTabla(datos, new String[] {columna}, new String[] {encabezado});
+        tabla.setSelectionMode(!seleccionMultiple ? ListSelectionModel.SINGLE_SELECTION : ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         this.setIconImage(new ImageIcon(this.getClass().getResource("/img/px16/list.png")).getImage());
         this.getContentPane().setBackground(Color.white);
         this.setLocationRelativeTo(null);
     }
-    public static Map crear(ArrayList<Map> datos, String columna) {
-        return SelectDialog.crear(datos, columna, columna);
+    public static List<Map> crear(ArrayList<Map> datos, String columna) {
+        return FlSelectDialog.crear(datos, columna, columna);
     }
-    public static Map crear(ArrayList<Map> datos, String columna, String encabezado) {
-        SelectDialog sel = new SelectDialog(datos, columna, encabezado);
+    public static List<Map> crear(ArrayList<Map> datos, String columna, String encabezado) {
+        return FlSelectDialog.crear(datos, columna, columna, false);
+    }
+    public static List<Map> crear(ArrayList<Map> datos, String columna, String encabezado, boolean seleccionMultiple) {
+        FlSelectDialog sel = new FlSelectDialog(datos, columna, encabezado, seleccionMultiple);
         sel.setVisible(true);
-        return sel.getRegistro();
+        return sel.getSeleccionado();
     }
     private void llenarTabla(ArrayList<Map> datos, String[] columnas, String[] encabezados) {
         tabla.setDataProvider(datos, columnas, encabezados);
     }
-    public Map getRegistro() {
-        return this.registro;
+    public Map getUnSeleccionado() {
+        return tabla.getSelectedMap();
+    }
+    public List<Map> getSeleccionado() {
+        return this.seleccionado;
     }
     public boolean isOk() {
         return this.ok;
     }
     private void cerrar() {
         ok = false;
-        registro = null;
+        seleccionado = new ArrayList<>();
         this.dispose();
     }
     private void aceptar() {
         if (tabla.getSelectedRow() != -1) {
             ok = true;
-            registro = tabla.getSelectedMap();
+            seleccionado = tabla.getSelectedMaps();
             this.dispose();
         } else {
             FlDialog.showFullWarningDialog("Seleccione una opción válida.", FlDialog.BOTTOM);
@@ -149,7 +162,7 @@ public class SelectDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2))
                     .addComponent(flSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
