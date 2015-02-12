@@ -1,13 +1,11 @@
 package org.aguilar.swinglib.swing.fl;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import javax.swing.ImageIcon;
-import javax.swing.JDesktopPane;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.beans.PropertyVetoException;
@@ -15,12 +13,19 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultDesktopManager;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 
 /**
  *
@@ -32,31 +37,37 @@ public class FlDesktopPane extends JDesktopPane {
     public static enum SizeMode {
         NORMAL, STRETCH, TILE
     }
-//    public static final int NORMAL = 0;
-//    public static final int STRETCH = 1;
-//    public static final int TILE = 2;
     private static int FRAME_OFFSET = 20;
     private FlDesktopManager manager;
     private final List<MaximizeListener> maxListeners = new ArrayList<MaximizeListener>();
     private Image image;
     private SizeMode imageSizeMode = SizeMode.NORMAL;
     private Map sizes = new LinkedHashMap();
+    private JMenu menu;
 
     public FlDesktopPane() {
         manager = new FlDesktopManager();
         setDesktopManager(manager);
     }
     public FlDesktopPane(String imagePath) {
-        if (imagePath != null)
+        if (imagePath != null) {
             image = new ImageIcon(getClass().getResource(imagePath)).getImage();
+        }
         manager = new FlDesktopManager();
         setDesktopManager(manager);
     }
     public FlDesktopPane(Image image) {
-        if (image != null)
+        if (image != null) {
             this.image = image;
+        }
         manager = new FlDesktopManager();
         setDesktopManager(manager);
+    }
+    public JMenu getMenu() {
+        return menu;
+    }
+    public void setMenu(JMenu menu) {
+        this.menu = menu;
     }
     public void setImage(Image image) {
         this.image = image;
@@ -100,14 +111,16 @@ public class FlDesktopPane extends JDesktopPane {
                     }
             }
             setOpaque(false);
-        } else
+        } else {
             setOpaque(true);
+        }
         super.paint(g2);
     }
     public void cascadeFrames() throws PropertyVetoException {
         JInternalFrame[] frames = getAllFrames();
-        if (frames.length == 0)
+        if (frames.length == 0) {
             return;
+        }
         for (int i = 0; i < frames.length; i++) {
             frames[i].setMaximum(false);
             frames[i].setSize((Dimension)sizes.get(frames[i].getClass().getCanonicalName()));
@@ -118,8 +131,9 @@ public class FlDesktopPane extends JDesktopPane {
     }
     public void tileFrames() throws PropertyVetoException {
         JInternalFrame frames[] = getAllFrames();
-        if (frames.length == 0)
+        if (frames.length == 0) {
             return;
+        }
         int frameHeight = getBounds().height / frames.length;
         int y = 0;
         for (int i = 0; i < frames.length; i++) {
@@ -132,8 +146,63 @@ public class FlDesktopPane extends JDesktopPane {
     }
     public void closeFrames() {
         JInternalFrame frames[] = getAllFrames();
-        for (JInternalFrame jif : frames)
+        for (JInternalFrame jif : frames) {
             jif.dispose();
+        }
+    }
+    public void openFrame(FlInternalFrame nuevoFrame, String titulo) {
+        openFrame(nuevoFrame, titulo, true, false);
+    }
+    public void openFrame(FlInternalFrame nuevoFrame, String titulo, boolean abrir) {
+        openFrame(nuevoFrame, titulo, abrir, false);
+    }
+    public void openFrame(FlInternalFrame nuevoFrame, String titulo, boolean abrir, boolean maximizar) {
+        FlInternalFrame activeFrame = comprobarFrames(nuevoFrame.getClass().getCanonicalName());
+        if (activeFrame != null) {
+            this.getDesktopManager().activateFrame(activeFrame);
+            nuevoFrame.dispose();
+        } else {
+            this.add(nuevoFrame);
+            nuevoFrame.setVisible(true);
+            try {
+                nuevoFrame.setMaximum(maximizar);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(FlDesktopPane.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            agregarElementoMenu(nuevoFrame, titulo);
+        }
+    }
+    private FlInternalFrame comprobarFrames(String className) {
+        JInternalFrame[] internalFrames = this.getAllFrames();
+        for (JInternalFrame jif : internalFrames) {
+            if (jif.getClass().getCanonicalName().equals(className)) {
+                return (FlInternalFrame)jif;
+            }
+        }
+        return null;
+    }
+    private void agregarElementoMenu(FlInternalFrame newFrame, String name){
+        JMenuItem menuItem = new JMenuItem();
+        menuItem.setText(name);
+//        menuItem.setIcon(new ImageIcon(this.getClass().getResource("/img/16px/window.png")));
+        menuItem.putClientProperty("frame", newFrame);
+        newFrame.putClientProperty("menuItem", menuItem);
+        final FlDesktopPane desktopPane = this;
+        menuItem.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                javax.swing.JMenuItem menu = (javax.swing.JMenuItem)evt.getSource();
+                desktopPane.getDesktopManager().activateFrame((JInternalFrame)menu.getClientProperty("frame"));
+            }
+        });
+        this.menu.add(menuItem);
+        newFrame.addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosed(InternalFrameEvent evt) {
+                FlInternalFrame frame = (FlInternalFrame)evt.getSource();
+                menu.remove((JMenuItem)frame.getClientProperty("menuItem"));
+            }
+        });
     }
     public interface MaximizeListener {
         public void internalFrameMaximized(JInternalFrame f);
@@ -143,12 +212,14 @@ public class FlDesktopPane extends JDesktopPane {
         maxListeners.add(maxListener);
     }
     private void fireOne(JInternalFrame f) {
-        for (MaximizeListener guy : maxListeners)
+        for (MaximizeListener guy : maxListeners) {
             guy.internalFrameMaximized(f);
+        }
     }
     private void fireTwo(JInternalFrame f) {
-        for (MaximizeListener guy : maxListeners)
+        for (MaximizeListener guy : maxListeners) {
             guy.internalFrameUnmaximized(f);
+        }
     }
     @Override
     public void setBounds(int x, int y, int w, int h) {
@@ -158,8 +229,9 @@ public class FlDesktopPane extends JDesktopPane {
     @Override
     public Component add(Component component) {
         super.add(component);
-        if (!(component instanceof JInternalFrame))
+        if (!(component instanceof JInternalFrame)) {
             return component;
+        }
         JInternalFrame frame = (JInternalFrame)component;
         JInternalFrame[] allFrames = getAllFrames();
         checkDesktopSize();
@@ -174,8 +246,9 @@ public class FlDesktopPane extends JDesktopPane {
         checkDesktopSize();
     }
     private void checkDesktopSize() {
-        if (getParent() != null && isVisible())
+        if (getParent() != null && isVisible()) {
             manager.resizeDesktop();
+        }
     }
 
     /**
@@ -221,8 +294,9 @@ public class FlDesktopPane extends JDesktopPane {
         private JScrollPane getScrollPane() {
             if (FlDesktopPane.this.getParent() instanceof JViewport) {
                 JViewport viewPort = (JViewport)FlDesktopPane.this.getParent();
-                if (viewPort.getParent() instanceof JScrollPane)
+                if (viewPort.getParent() instanceof JScrollPane) {
                     return (JScrollPane) viewPort.getParent();
+                }
             }
             return null;
         }
@@ -233,10 +307,11 @@ public class FlDesktopPane extends JDesktopPane {
             JScrollPane scrollPane = getScrollPane();
             if (scrollPane != null) {
                 for (JInternalFrame frame : FlDesktopPane.this.getAllFrames()) {
-                    if (rect == null)
+                    if (rect == null) {
                         rect = frame.getBounds();
-                    else
+                    } else {
                         rect = rect.union(frame.getBounds());
+                    }
                 }
                 setAllSize(rect.width, rect.height);
                 scrollPane.invalidate();

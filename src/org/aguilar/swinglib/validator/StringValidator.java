@@ -3,6 +3,9 @@ package org.aguilar.swinglib.validator;
 import java.awt.Color;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 import java.util.regex.Pattern;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
@@ -11,8 +14,6 @@ import org.aguilar.swinglib.swing.fl.FlStringField;
 /**
  *
  * @author Leo Aguilar
- * Trébol Informatica
- * http://trebolinformatica.com.mx
  */
 public class StringValidator extends FocusAdapter {
 
@@ -20,7 +21,8 @@ public class StringValidator extends FocusAdapter {
     private boolean onlyDigits;
     private int minLenght = 0;
     private String[] errorMessages;
-    private static final String NUM = "\\d+(\\.\\d+)?";
+//    private static final String NUM = "\\d+(\\.\\d+)?";
+    private static final String NUM = "(([1-9]\\d{0,2}(,\\d{3})*)|(([1-9]\\d*)?\\d))(\\.\\d\\d)?";
     public static final int REQUERIDO = 0;
     public static final int LONG_MINIMA = 1;
     public static final int NUMEROS = 2;
@@ -46,21 +48,25 @@ public class StringValidator extends FocusAdapter {
         if (!(boolean)fsf.getControl().get("cancelado")) {
             if (required) {
                 if (fsf.getText().trim().equals("")) {
-                    setState(REQUERIDO, fsf);
+                    establecerEstado(REQUERIDO, fsf);
                     return;
                 }
             }
             if (onlyDigits) {
                 if (fsf.isTestingNumberFormat()) {
+//                    if (!esNumeroValido(fsf.getText().trim())) {
+//                        establecerEstado(NUMEROS, fsf);
+//                        return;
+//                    }
                     if (!Pattern.matches(NUM, fsf.getText().trim())) {
-                        setState(NUMEROS, fsf);
+                        establecerEstado(NUMEROS, fsf);
                         return;
                     }
                 }
             }
             if (minLenght > 0) {
                 if (fsf.getText().trim().length() < minLenght) {
-                    setState(LONG_MINIMA, fsf);
+                    establecerEstado(LONG_MINIMA, fsf);
                     return;
                 }
             }
@@ -74,7 +80,16 @@ public class StringValidator extends FocusAdapter {
         fsf.setToolTipText(null);
         ToolTipManager.sharedInstance().unregisterComponent(fsf);
     }
-    private void setState(int msg, FlStringField fsf) {
+    private boolean esNumeroValido(String numero) {
+        Number num = null;
+        try {
+            num = NumberFormat.getNumberInstance(new Locale("es", "MX")).parse(numero);
+        } catch (ParseException ex) {
+            
+        }
+        return num != null;
+    }
+    private void establecerEstado(int msg, FlStringField fsf) {
         switch (msg) {
             case REQUERIDO  : fsf.setBackground(new Color(220, 144, 144, 255)); break;
             case LONG_MINIMA: fsf.setBackground(new Color(144, 185, 220, 255)); break;

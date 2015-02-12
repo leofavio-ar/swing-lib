@@ -28,7 +28,7 @@ public class FlSelectDialog extends javax.swing.JDialog {
     /**
      * Creates new form Seleccion
      */
-    public FlSelectDialog(ArrayList<Map> datos, String columna, String encabezado, boolean seleccionMultiple) {
+    public FlSelectDialog(ArrayList<Map> datos, String columna, String[] columnas, String[] encabezados, boolean seleccionMultiple) {
         super(new JFrame(), true);
         initComponents();
         hotKeys = new HotKeys(this);
@@ -36,20 +36,23 @@ public class FlSelectDialog extends javax.swing.JDialog {
         this.columna = columna;
         this.seleccionMultiple = seleccionMultiple;
         seleccionado = new ArrayList<>();
-        llenarTabla(datos, new String[] {columna}, new String[] {encabezado});
+        llenarTabla(datos, columnas, encabezados);
         tabla.setSelectionMode(!seleccionMultiple ? ListSelectionModel.SINGLE_SELECTION : ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         this.setIconImage(new ImageIcon(this.getClass().getResource("/img/px16/list.png")).getImage());
         this.getContentPane().setBackground(Color.white);
         this.setLocationRelativeTo(null);
     }
-    public static List<Map> crear(ArrayList<Map> datos, String columna) {
-        return FlSelectDialog.crear(datos, columna, columna);
+    public static List<Map> crear(ArrayList<Map> datos, String colFiltro) {
+        return FlSelectDialog.crear(datos, colFiltro, colFiltro);
     }
-    public static List<Map> crear(ArrayList<Map> datos, String columna, String encabezado) {
-        return FlSelectDialog.crear(datos, columna, columna, false);
+    public static List<Map> crear(ArrayList<Map> datos, String colFiltro, String encabezado) {
+        return FlSelectDialog.crear(datos, colFiltro, colFiltro, false);
     }
-    public static List<Map> crear(ArrayList<Map> datos, String columna, String encabezado, boolean seleccionMultiple) {
-        FlSelectDialog sel = new FlSelectDialog(datos, columna, encabezado, seleccionMultiple);
+    public static List<Map> crear(ArrayList<Map> datos, String colFiltro, String encabezado, boolean seleccionMultiple) {
+        return FlSelectDialog.crear(datos, colFiltro, new String[] {colFiltro}, new String[] {encabezado}, seleccionMultiple);
+    }
+    public static List<Map> crear(ArrayList<Map> datos, String colFiltro, String[] columnas, String[] encabezados, boolean seleccionMultiple) {
+        FlSelectDialog sel = new FlSelectDialog(datos, colFiltro, columnas, encabezados, seleccionMultiple);
         sel.setVisible(true);
         return sel.getSeleccionado();
     }
