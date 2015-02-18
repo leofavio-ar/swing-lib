@@ -13,14 +13,21 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import org.aguilar.swinglib.swing.fl.dialogs.FlDialog;
 import org.aguilar.swinglib.swing.fl.dialogs.FlSelectDialog;
 
 /**
@@ -40,22 +47,57 @@ public class FlSelectField extends JPanel {
     private String[] columnas;
     private String[] encabezados;
     private boolean aceptaEliminacion;
+    private boolean requerido;
+    private boolean mostrarErrorVacio;
+    private Object objetoControl;
+    private String procesoControl;
     private String tipSeleccion = "Click para seleccionar un registro";
     private String tipBorrar = "Click para eliminar la selección";
+    private String mensajeCatalogoVacio;
 
     public FlSelectField() {
-        this(false);
+        this(false, true);
     }
-    public FlSelectField(boolean aceptaEliminacion) {
+    public FlSelectField(boolean aceptaEliminacion, boolean mostrarErrorVacio) {
         super();
         initComponents();
         registro = new HashMap();
         this.columnas = new String[] {};
+        this.encabezados = new String[] {};
+        setMensajeCatalogoVacio("No existen registros en el catálogo...");
         stringField.setFont(this.getFont());
         setAceptaEliminacion(aceptaEliminacion);
+        setMostrarErrorVacio(mostrarErrorVacio);
     }
     public Map getRegistro() {
         return registro;
+    }
+    public void setRegistro(Map registro) {
+        this.registro = registro;
+        stringField.setText(registro == null ? 
+                "" : 
+                primerColumnaTexto());
+    }
+    private String primerColumnaTexto() {
+        for (Iterator it = this.registro.entrySet().iterator(); it.hasNext(); ){
+            Map.Entry en = (Map.Entry)it.next();
+            if (en.getValue() instanceof String) {
+                return en.getValue().toString();
+            }
+        }
+        return this.registro.get(0).toString();
+    }
+    public boolean isMostrarErrorVacio() {
+        return mostrarErrorVacio;
+    }
+    public void setMostrarErrorVacio(boolean mostrarErrorVacio) {
+        this.mostrarErrorVacio = mostrarErrorVacio;
+    }
+    public String getMensajeCatalogoVacio() {
+        return mensajeCatalogoVacio;
+    }
+    public void setMensajeCatalogoVacio(String mensajeCatalogoVacio) {
+        this.mensajeCatalogoVacio = mensajeCatalogoVacio;
     }
     public String getColumnaPrincipal() {
         return columnaPrincipal;
@@ -88,6 +130,37 @@ public class FlSelectField extends JPanel {
         this.aceptaEliminacion = aceptaEliminacion;
         lblBorrar.setVisible(aceptaEliminacion);
     }
+    public boolean isRequerido() {
+        return requerido;
+    }
+    public void setRequerido(boolean requerido) {
+        this.requerido = requerido;
+        this.stringField.setRequired(requerido);
+    }
+    public void setControlDataProvider(Object objetoControl, String procesoControl, String[] columnas, String[] encabezados) {
+        this.objetoControl = objetoControl;
+        this.procesoControl = procesoControl;
+        this.columnas = columnas;
+        this.encabezados = encabezados;
+    }
+    public void setControlDataProvider(Object objetoControl, String procesoControl, String columna, String encabezado) {
+        this.objetoControl = objetoControl;
+        this.procesoControl = procesoControl;
+        this.columnas = new String[] {columna};
+        this.encabezados = new String[] {encabezado};
+    }
+    public Object getObjetoControl() {
+        return objetoControl;
+    }
+    public void setObjetoControl(Object objetoControl) {
+        this.objetoControl = objetoControl;
+    }
+    public String getProcesoControl() {
+        return procesoControl;
+    }
+    public void setProcesoControl(String procesoControl) {
+        this.procesoControl = procesoControl;
+    }
     public String getTipSeleccion() {
         return tipSeleccion;
     }
@@ -112,26 +185,40 @@ public class FlSelectField extends JPanel {
         if (dataProvider == null) {
             dataProvider = new ArrayList<>();
         }
-        String[] columnas = new String[dataProvider.get(0).size()];
+        if (dataProvider.isEmpty()) {
+            setDataProvider(dataProvider, new String[] {}, new String[] {});
+            return;
+        }
+        String[] cols = new String[dataProvider.get(0).size()];
         int i = 0;
         Set<Map.Entry> set = dataProvider.get(0).entrySet();
         for (Map.Entry entry : set) {
-            columnas[i ++] = entry.getKey().toString();
+            cols[i ++] = entry.getKey().toString();
         }
-        setDataProvider(dataProvider, columnas, columnas);
+        setDataProvider(dataProvider, cols, cols, null, null);
     }
     public void setDataProvider(ArrayList<Map> dataProvider, String[] columnas) {
-        setDataProvider(dataProvider, columnas, columnas);
+        setDataProvider(dataProvider, columnas, columnas, null, null);
     }
     public void setDataProvider(ArrayList<Map> dataProvider, String[] columnas, String[] encabezados) {
+        setDataProvider(dataProvider, columnas, encabezados, null, null);
+    }
+    public void setDataProvider(ArrayList<Map> dataProvider, String[] columnas, String[] encabezados, Object objetoControl, String procesoControl) {
         if (columnas.length != encabezados.length) {
             throw new IllegalArgumentException("El tamaño del arreglo de columnas es distinto al tamaño del arreglo de encabezados");
         }
         this.dataProvider = dataProvider;
         this.columnas = columnas;
         this.encabezados = encabezados;
+        this.objetoControl = objetoControl;
+        this.procesoControl = procesoControl;
     }
-
+    public void setValidation() {
+        this.stringField.setValidation();
+    }
+    public void validar() {
+        this.stringField.validar();
+    }
     @Override
     public void setFont(Font font) {
         super.setFont(font);
@@ -163,31 +250,52 @@ public class FlSelectField extends JPanel {
     }
     private void lblSeleccionarMouseClickedHandler(MouseEvent e) {
         if (((Component)e.getSource()).isEnabled()) {
+            if (objetoControl != null && procesoControl != null) {
+                Method method;
+                try {
+                    method = objetoControl.getClass().getDeclaredMethod(procesoControl, null);
+                    method.setAccessible(true);
+                    Object resultado = method.invoke(objetoControl, null);
+                    if (resultado instanceof List || resultado instanceof ArrayList) {
+                        setDataProvider(
+                                (ArrayList<Map>)resultado, 
+                                this.columnas == null ? new String[] {} : this.columnas, 
+                                this.encabezados == null ? new String[] {} : this.encabezados, 
+                                this.objetoControl, 
+                                this.procesoControl);
+                    }
+                } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    Logger.getLogger(FlSelectField.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (this.dataProvider.isEmpty() && this.mostrarErrorVacio) {
+                FlDialog.showFullWarningDialog(this.mensajeCatalogoVacio);
+            }
             FlSelectDialog selectDialog = new FlSelectDialog(this.dataProvider, "", this.columnas, this.encabezados, false);
             selectDialog.setVisible(true);
             if (selectDialog.isOk()) {
+                Map aux = selectDialog.getSeleccionado().get(0);
                 this.registro = selectDialog.getSeleccionado().get(0);
                 if (this.columnaPrincipal != null) {
                     stringField.setText(registro.containsKey(columnaPrincipal) ? 
-                            registro.get(columnaPrincipal).toString() :
-                            registro.get(columnas[0]).toString());
+                            aux.get(columnaPrincipal).toString() :
+                            primerColumnaTexto());
                 } else {
-                    stringField.setText(registro.get(columnas[0]).toString());
+                    stringField.setText(primerColumnaTexto());
                 }
             }
         }
     }
     private void lblBorrarMouseClickedHandler(MouseEvent e) {
         if (((Component)e.getSource()).isEnabled()) {
-            this.registro = null;
-            stringField.setText("");
+            setRegistro(null);
         }
     }
     @SuppressWarnings("unchecked")
     private void initComponents() {
         stringField = new FlStringField();
         stringField.setEditable(false);
-        lblSeleccionar = new JLabel(new ImageIcon(this.getClass().getResource("/img/px24/buscar.png")));
+        lblSeleccionar = new JLabel(new ImageIcon(this.getClass().getResource("/img/px21/buscar.png")));
         lblSeleccionar.setOpaque(false);
         lblSeleccionar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         lblSeleccionar.addMouseListener(new MouseAdapter() {
@@ -196,7 +304,7 @@ public class FlSelectField extends JPanel {
                 lblSeleccionarMouseClickedHandler(e);
             }
         });
-        lblBorrar = new JLabel(new ImageIcon(this.getClass().getResource("/img/px24/borrar.png")));
+        lblBorrar = new JLabel(new ImageIcon(this.getClass().getResource("/img/px21/borrar.png")));
         lblBorrar.setOpaque(false);
         lblBorrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         lblBorrar.addMouseListener(new MouseAdapter() {
@@ -211,7 +319,7 @@ public class FlSelectField extends JPanel {
         panelBotones.setOpaque(false);
         this.setOpaque(false);
         this.setLayout(new BorderLayout(5, 0));
-        this.setPreferredSize(new Dimension(200, 24));
+        this.setPreferredSize(new Dimension(200, 21));
         this.setOpaque(false);
         this.add(stringField, BorderLayout.CENTER);
         this.add(panelBotones, BorderLayout.EAST);
@@ -220,7 +328,7 @@ public class FlSelectField extends JPanel {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Prueba de SelectField");
         frame.setLayout(new BorderLayout());
-        final FlSelectField sel = new FlSelectField(true);
+        final FlSelectField sel = new FlSelectField(true, true);
         ArrayList<Map> list = new ArrayList<>();
         Map m = new HashMap();
         m.put("uno", "uno,uno");

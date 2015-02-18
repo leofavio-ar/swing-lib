@@ -6,8 +6,6 @@
 package org.aguilar.swinglib.utils;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  *
@@ -36,14 +34,13 @@ public class EasyEntry implements Serializable {
     }
     @Override
     public String toString() {
-        return key + ":" + value.toString();
+        return key + "=" + value.toString();
     }
-    public static EasyEntry create(String key, Object value) {
+    public static EasyEntry crear(String key, Object value) {
         return new EasyEntry(key, value);
     }
-
     public static void main(String[] args) {
-        EasyEntry entry = EasyEntry.create("identificador", "valor");
+        EasyEntry entry = EasyEntry.crear("identificador", "valor");
         System.out.println(entry.toString());
     }
 

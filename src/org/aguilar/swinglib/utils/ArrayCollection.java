@@ -52,16 +52,16 @@ public class ArrayCollection extends ArrayList implements Serializable {
     
     public static void main(String[] args) {
         ArrayCollection collection = new ArrayCollection();
-        EasyMap map1 = EasyMap.create(
-                EasyEntry.create("KEY1", 1),
-                EasyEntry.create("KEY2", "VALUE2"));
-        EasyMap map2 = EasyMap.create(
-                EasyEntry.create("KEY3", 3),
-                EasyEntry.create("KEY4", "VALUE4"));
-        EasyMap map3 = EasyMap.create(
-                EasyEntry.create("KEY5", 5),
-                EasyEntry.create("KEY6", "VALUE4"),
-                EasyEntry.create("KEY7", 7));
+        EasyMap map1 = EasyMap.crear(
+                EasyEntry.crear("KEY1", 1),
+                EasyEntry.crear("KEY2", "VALUE2"));
+        EasyMap map2 = EasyMap.crear(
+                EasyEntry.crear("KEY3", 3),
+                EasyEntry.crear("KEY4", "VALUE4"));
+        EasyMap map3 = EasyMap.crear(
+                EasyEntry.crear("KEY5", 5),
+                EasyEntry.crear("KEY6", "VALUE4"),
+                EasyEntry.crear("KEY7", 7));
         collection.add(map1);
         collection.add(map2);
         collection.add(map3);
