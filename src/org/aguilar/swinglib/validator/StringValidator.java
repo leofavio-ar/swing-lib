@@ -21,22 +21,24 @@ public class StringValidator extends FocusAdapter {
     private boolean onlyDigits;
     private int minLenght = 0;
     private String[] errorMessages;
+    private Color bgColor;
 //    private static final String NUM = "\\d+(\\.\\d+)?";
     private static final String NUM = "(([1-9]\\d{0,2}(,\\d{3})*)|(([1-9]\\d*)?\\d))(\\.\\d\\d)?";
     public static final int REQUERIDO = 0;
     public static final int LONG_MINIMA = 1;
     public static final int NUMEROS = 2;
 
-    public StringValidator(boolean required, int minLenght, boolean onlyDigits, String[] errorMessages) {
+    public StringValidator(boolean required, int minLenght, boolean onlyDigits, String[] errorMessages, Color bgColor) {
         super();
         this.required = required;
         this.onlyDigits = onlyDigits;
         this.minLenght = minLenght;
         this.errorMessages = errorMessages;
+        this.bgColor = bgColor;
     }
     @Override
     public void focusGained(FocusEvent evt) {
-        ((FlStringField)evt.getComponent()).setBackground(null);
+        ((FlStringField)evt.getComponent()).setBackground(bgColor);
         ((FlStringField)evt.getComponent()).setForeground(null);
     }
     @Override
@@ -75,7 +77,7 @@ public class StringValidator extends FocusAdapter {
         fsf.getControl().put("error", Boolean.FALSE);
         fsf.getControl().put("mensajeError", "");
 //        fsf.setBackground(UIManager.getColor("TextField.background"));
-        fsf.setBackground(UIManager.getColor("TextField.background"));
+        fsf.setBackground(bgColor);
         fsf.setForeground(UIManager.getColor("TextField.foreground"));
         fsf.setToolTipText(null);
         ToolTipManager.sharedInstance().unregisterComponent(fsf);

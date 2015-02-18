@@ -82,6 +82,13 @@ public class FlSelectDialog extends javax.swing.JDialog {
             FlDialog.showFullWarningDialog("Seleccione una opción válida.", FlDialog.BOTTOM);
         }
     }
+    private void filtrar() {
+        if (this.columna.equals("")) {
+            tabla.filter(txtBusqueda.getText().trim());
+        } else {
+            tabla.filter(txtBusqueda.getText().trim(), this.columna);
+        }
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -103,6 +110,11 @@ public class FlSelectDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Selección de registro");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Seleccione un registro del siguiente listado:");
@@ -205,7 +217,7 @@ public class FlSelectDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txtBusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBusquedaKeyReleased
-        tabla.filter(txtBusqueda.getText().trim(), this.columna);
+        filtrar();
     }//GEN-LAST:event_txtBusquedaKeyReleased
 
     private void tablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMouseClicked
@@ -213,6 +225,10 @@ public class FlSelectDialog extends javax.swing.JDialog {
             aceptar();
         }
     }//GEN-LAST:event_tablaMouseClicked
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        cerrar();
+    }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.aguilar.swinglib.swing.fl.FlSeparator flSeparator1;

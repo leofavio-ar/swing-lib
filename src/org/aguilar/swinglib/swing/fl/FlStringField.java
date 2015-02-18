@@ -45,6 +45,7 @@ public class FlStringField extends JTextField {
     private String fieldName = "";
     private ImageIcon placeHolderIcon;
     private String placeHolderText = "";
+    private Color bgColor;
     
     private Insets dummyInsets;
     private Map control;
@@ -70,6 +71,7 @@ public class FlStringField extends JTextField {
         Border border = UIManager.getBorder("TextField.border");
         JTextField dummy = new JTextField();
         this.dummyInsets = border.getBorderInsets(dummy);
+        bgColor = this.getBackground();
         addSelectAllOnFocusListener();
     }
     public FlStringField(String text) {
@@ -279,12 +281,20 @@ public class FlStringField extends JTextField {
         this.requiredErrorMessage = requiredErrorMessage;
         this.tooShortErrorMessage = tooShortErrorMessage;
         validator = new StringValidator(
-                required, minLength, onlyDigits, new String[] {requiredErrorMessage, tooShortErrorMessage, invalidNumberErrorMessage});
+                required, minLength, onlyDigits, new String[] {requiredErrorMessage, tooShortErrorMessage, invalidNumberErrorMessage}, bgColor);
         addFocusListener(validator);
     }
     public void validar() {
         if (validator != null) {
             validator.validar(this);
+        }
+    }
+    @Override
+    public void setEditable(boolean editable) {
+        super.setEditable(editable);
+        if (!editable) {
+            bgColor = new Color(240, 240, 240);
+            this.setBackground(bgColor);
         }
     }
     @Override

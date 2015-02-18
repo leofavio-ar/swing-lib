@@ -43,7 +43,7 @@ public class FlDesktopPane extends JDesktopPane {
     private Image image;
     private SizeMode imageSizeMode = SizeMode.NORMAL;
     private Map sizes = new LinkedHashMap();
-    private JMenu menu;
+    private JMenu menu = null;
 
     public FlDesktopPane() {
         manager = new FlDesktopManager();
@@ -169,7 +169,9 @@ public class FlDesktopPane extends JDesktopPane {
             } catch (PropertyVetoException ex) {
                 Logger.getLogger(FlDesktopPane.class.getName()).log(Level.SEVERE, null, ex);
             }
-            agregarElementoMenu(nuevoFrame, titulo);
+            if (this.menu != null) {
+                agregarElementoMenu(nuevoFrame, titulo);
+            }
         }
     }
     private FlInternalFrame comprobarFrames(String className) {

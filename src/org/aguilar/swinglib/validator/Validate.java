@@ -11,8 +11,6 @@ import org.aguilar.swinglib.swing.fl.FlStringField;
 /**
  *
  * @author Leo Aguilar
- * Trébol Informatica
- * http://www.trebolinformatica.com.mx
  */
 public class Validate {
 
