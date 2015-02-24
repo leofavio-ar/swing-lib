@@ -56,10 +56,14 @@ public class ColorUtils {
      * @return Un entero entre 0 y 255 que indica el brillo del <code>Color</code>
      */
     private static int getBrightness(Color color) {
-        return (int) Math.sqrt(
-            color.getRed() * color.getRed() * 0.241f +
-            color.getGreen() * color.getGreen() * 0.691f +
-            color.getBlue() * color.getBlue() * 0.068f);
+        return (int)Math.sqrt(
+            color.getRed() * color.getRed() * 0.241D +
+            color.getGreen() * color.getGreen() * 0.691D +
+            color.getBlue() * color.getBlue() * 0.068D);
+    }
+    public static boolean isBright(Color color) {
+        float hsb[] = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        return (int)(hsb[2] * 255f / 1f) > 130;
     }
     /**
      * Indica si un <code>Color</code> se considera oscuro o no a partir de un
@@ -73,8 +77,9 @@ public class ColorUtils {
      * @return <code>true</code> si el color es oscuro.
      */
     public static boolean isDark(Color color, int treshold) {
-        if (treshold < 0 || treshold > 255)
+        if (treshold < 0 || treshold > 255) {
             throw new IllegalArgumentException("El valor del umbral debe estar entre 0 y 255. 0 &let treshold &let 255");
+        }
         return getBrightness(color) < treshold;
     }
     /**

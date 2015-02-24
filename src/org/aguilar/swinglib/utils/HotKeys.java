@@ -10,7 +10,6 @@ import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -22,9 +21,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import org.aguilar.swinglib.swing.fl.dialogs.TranslucentDialog;
+import org.aguilar.swinglib.utils.interfaces.FormAdministrable;
 
 /**
- *
+ * Representa los <code>KeyStroke</code> que disparan las funciones de un componente.
  * @author Leonardo Favio Aguilar Ramírez
  */
 public class HotKeys {
@@ -45,8 +45,63 @@ public class HotKeys {
     private ActionMap actionMap;
     private InputMap inputMap;
     private Object componente;
-    
+    private String objetoControl;
+   
+    /**
+     * Crea un objeto <code>HotKeys</code> para controlar los eventos de teclas en un componente que 
+     * implemente la interface <code>FormAdministrable</code> y sea capaz de manejar un <code>ActionMap</code>.
+     * Por defecto se asigna el objeto de nombre "control" del componente para efectos de controlar los 
+     * estados en los que puede o no ejecutarse la función asignada a las acciones de los <code>KeyStroke</code>.
+     * @param componente Un objeto <code>FormAdministrable</code> que contenga un <code>ActionMap</code>.
+     */
+    public HotKeys(FormAdministrable componente) {
+        this((Object)componente, "control");
+    }
+    /**
+     * Crea un objeto <code>HotKeys</code> para controlar los eventos de teclas en un componente que 
+     * implemente la interface <code>FormAdministrable</code> y sea capaz de manejar un <code>ActionMap</code>.
+     * @param componente Un objeto <code>FormAdministrable</code> que contenga un <code>ActionMap</code>.
+     * @param objetoControl El objeto del componente que controla los estados en los que puede o no ejecutarse
+     * la función asignada a las acciones de los <code>KeyStroke</code>.
+     */
+    public HotKeys(FormAdministrable componente, String objetoControl) {
+        this((Object)componente, objetoControl);
+    }
+    /**
+     * Crea un objeto <code>HotKeys</code> para controlar los eventos de teclas en un componente que sea
+     * capaz de manejar un <code>ActionMap</code>. Por defecto se asigna el objeto de nombre "control"
+     * del componente para efectos de controlar los estados en los que puede o no ejecutarse la función
+     * asignada a las acciones de los <code>KeyStroke</code>.
+     * @param componente El componente al que se asignarán los <code>KeyStroke</code>. 
+     * Los componentes soportados pueden ser alguno de los siguientes:
+     * <ul>
+     * <li><code>JComponent</code></li>
+     * <li><code>JFrame</code></li>
+     * <li><code>JDialog</code></li>
+     * <li><code>TranslucentDialog</code></li>
+     * </ul>
+     * O un objeto que implemente la interface <code>FormAdministrable</code>.
+     */
     public HotKeys(Object componente) {
+        this(componente, "control");
+    }
+    /**
+     * Crea un objeto <code>HotKeys</code> para controlar los eventos de teclas en un componente que sea
+     * capaz de manejar un <code>ActionMap</code>.
+     * @param componente El componente al que se asignarán los <code>KeyStroke</code>. 
+     * Los componentes soportados pueden ser alguno de los siguientes:
+     * <ul>
+     * <li><code>JComponent</code></li>
+     * <li><code>JFrame</code></li>
+     * <li><code>JDialog</code></li>
+     * <li><code>TranslucentDialog</code></li>
+     * </ul>
+     * O un objeto que implemente la interface <code>FormAdministrable</code>.
+     * @param objetoControl El objeto del componente que controla los estados en los que puede o no ejecutarse
+     * la función asignada a las acciones de los <code>KeyStroke</code>.
+     */
+    public HotKeys(Object componente, String objetoControl) {
+        this.objetoControl = objetoControl;
         if (componente instanceof JComponent) {
             this.inputMap = ((JComponent)componente).getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
             this.actionMap = ((JComponent)componente).getActionMap();
@@ -64,6 +119,22 @@ public class HotKeys {
         }
         this.componente = componente;
     }
+    public String getObjetoControl() {
+        return objetoControl;
+    }
+    public void setObjetoControl(String objetoControl) {
+        this.objetoControl = objetoControl;
+    }
+    /**
+     * Agrega una acción al ActionMap del componente asignado.
+     * @param keyStroke Un objeto <code>KeyStroke</code> que indica cual tecla dispara la acción.
+     * @param nombre    El nombre de la acción que se agregará al <code>ActionMap</code> del componente.
+     * @param nombreFuncion El nombre de la función del componente que se ejecutará al disparar el <code>KeyStroke</code>.
+     * @param estados   Un array de objetos <code>int</code> para controlar la condicion en la que se 
+     *                  ejecuta el <code>KeyStroke</code>, estos valores pueden ser arbitrarios y
+     *                  se controlan mediante el objeto con el nombre asignado a <code>objetoControl</code> del
+     *                  componente.
+     */
     public void agregarAccion(KeyStroke keyStroke, String nombre, final String nombreFuncion, final int ... estados) {
         actionMap.put(nombre, new AbstractAction() {
             @Override
@@ -71,10 +142,13 @@ public class HotKeys {
                 try {
                     boolean ejecutar = false;
                     if (estados.length != 0) {
-                        Field control = componente.getClass().getDeclaredField("control");
+                        Field control = componente.getClass().getDeclaredField(objetoControl);
                         control.setAccessible(true);
-                        if (Arrays.binarySearch(estados, control.getInt(componente)) != -1) {
-                            ejecutar = true;
+                        for (int i : estados) {
+                            if (i == control.getInt(componente)) {
+                                ejecutar = true;
+                                break;
+                            }
                         }
                     } else {
                         ejecutar = true;

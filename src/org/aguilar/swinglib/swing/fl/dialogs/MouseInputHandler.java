@@ -5,14 +5,10 @@
 
 package org.aguilar.swinglib.swing.fl.dialogs;
 
-import java.awt.Dialog;
-import java.awt.Frame;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.Window;
 import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputListener;
 
@@ -31,11 +27,13 @@ public class MouseInputHandler implements MouseInputListener {
     public MouseInputHandler(TranslucentDialog dialog) {
         this.dialog = dialog;
     }
+    @Override
     public void mousePressed(MouseEvent ev) {
         Point dragWindowOffset = ev.getPoint();
         JComponent titlePane = dialog.getTitlePane();
-        if (dialog != null)
+        if (dialog != null) {
             dialog.toFront();
+        }
         Point convertedDragWindowOffset = SwingUtilities.convertPoint(dialog, dragWindowOffset, titlePane);
         if (titlePane.contains(convertedDragWindowOffset)) {
             if (   dragWindowOffset.y >= BORDER_DRAG_THICKNESS
@@ -50,9 +48,11 @@ public class MouseInputHandler implements MouseInputListener {
             dragOffsetY = dragWindowOffset.y;
         }
     }
+    @Override
     public void mouseReleased(MouseEvent ev) {
         isMovingWindow = false;
     }
+    @Override
     public void mouseDragged(MouseEvent ev) {
         if (isMovingWindow) {
             Point windowPt = MouseInfo.getPointerInfo().getLocation();
@@ -61,9 +61,13 @@ public class MouseInputHandler implements MouseInputListener {
             dialog.setLocation(windowPt);
         }
     }
+    @Override
     public void mouseClicked(MouseEvent e) {}
+    @Override
     public void mouseEntered(MouseEvent e) {}
+    @Override
     public void mouseExited(MouseEvent e) {}
+    @Override
     public void mouseMoved(MouseEvent e) {}
 
 }

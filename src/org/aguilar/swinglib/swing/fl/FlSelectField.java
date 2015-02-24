@@ -13,6 +13,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class FlSelectField extends JPanel {
     private String procesoControl;
     private String tipSeleccion = "Click para seleccionar un registro";
     private String tipBorrar = "Click para eliminar la selección";
-    private String mensajeCatalogoVacio;
+    private String mensajeCatalogoVacio = "No existen registros en el catálogo";
 
     public FlSelectField() {
         this(false, true);
@@ -64,19 +65,28 @@ public class FlSelectField extends JPanel {
         registro = new HashMap();
         this.columnas = new String[] {};
         this.encabezados = new String[] {};
-        setMensajeCatalogoVacio("No existen registros en el catálogo...");
         stringField.setFont(this.getFont());
+        setMensajeCatalogoVacio(mensajeCatalogoVacio);
         setAceptaEliminacion(aceptaEliminacion);
         setMostrarErrorVacio(mostrarErrorVacio);
+        setTipSeleccion(tipSeleccion);
+        setTipBorrar(tipBorrar);
     }
     public Map getRegistro() {
         return registro;
     }
     public void setRegistro(Map registro) {
+        this.firePropertyChange("registro", this.registro, registro);
         this.registro = registro;
-        stringField.setText(registro == null ? 
-                "" : 
-                primerColumnaTexto());
+        if (registro != null) {
+            if (this.columnaPrincipal != null) {
+                stringField.setText(registro.containsKey(columnaPrincipal) ?
+                        registro.get(columnaPrincipal).toString() :
+                        primerColumnaTexto());
+            }
+        } else {
+            stringField.setText("");
+        }
     }
     private String primerColumnaTexto() {
         for (Iterator it = this.registro.entrySet().iterator(); it.hasNext(); ){
@@ -137,17 +147,14 @@ public class FlSelectField extends JPanel {
         this.requerido = requerido;
         this.stringField.setRequired(requerido);
     }
+    public void setControlDataProvider(Object objetoControl, String procesoControl, String columna, String encabezado) {
+        setControlDataProvider(objetoControl, procesoControl, new String[] {columna}, new String[] {encabezado});
+    }
     public void setControlDataProvider(Object objetoControl, String procesoControl, String[] columnas, String[] encabezados) {
         this.objetoControl = objetoControl;
         this.procesoControl = procesoControl;
         this.columnas = columnas;
         this.encabezados = encabezados;
-    }
-    public void setControlDataProvider(Object objetoControl, String procesoControl, String columna, String encabezado) {
-        this.objetoControl = objetoControl;
-        this.procesoControl = procesoControl;
-        this.columnas = new String[] {columna};
-        this.encabezados = new String[] {encabezado};
     }
     public Object getObjetoControl() {
         return objetoControl;
@@ -275,10 +282,10 @@ public class FlSelectField extends JPanel {
             selectDialog.setVisible(true);
             if (selectDialog.isOk()) {
                 Map aux = selectDialog.getSeleccionado().get(0);
-                this.registro = selectDialog.getSeleccionado().get(0);
+                setRegistro(selectDialog.getSeleccionado().get(0));
                 if (this.columnaPrincipal != null) {
-                    stringField.setText(registro.containsKey(columnaPrincipal) ? 
-                            aux.get(columnaPrincipal).toString() :
+                    stringField.setText(registro.containsKey(this.columnaPrincipal) ? 
+                            aux.get(this.columnaPrincipal).toString() :
                             primerColumnaTexto());
                 } else {
                     stringField.setText(primerColumnaTexto());
@@ -290,6 +297,9 @@ public class FlSelectField extends JPanel {
         if (((Component)e.getSource()).isEnabled()) {
             setRegistro(null);
         }
+    }
+    public void agregarRegistroListener(PropertyChangeListener listener) {
+        this.addPropertyChangeListener("registro", listener);
     }
     @SuppressWarnings("unchecked")
     private void initComponents() {

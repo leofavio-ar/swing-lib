@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @author I.S.C. Leonardo Aguilar
  */
-public interface IFormulario {
+public interface FormAdministrable {
  
     public final static int EN_ESPERA = 0;
     public final static int REGISTRANDO = 1;

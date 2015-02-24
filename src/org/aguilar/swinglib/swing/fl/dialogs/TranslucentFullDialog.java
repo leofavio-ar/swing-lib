@@ -5,7 +5,6 @@
 
 package org.aguilar.swinglib.swing.fl.dialogs;
 
-import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -14,11 +13,12 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
-import java.awt.LinearGradientPaint;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
@@ -26,6 +26,7 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import org.aguilar.swinglib.utils.ColorUtils;
 
 /**
  *
@@ -57,6 +58,17 @@ public class TranslucentFullDialog extends JDialog {
         this.backgroundColor = backgroundColor;
         this.duration = duration;
         this.position = position;
+        GraphicsEnvironment ge = 
+            GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        boolean isPerPixelTranslucencySupported = 
+            gd.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT);
+        if (!isPerPixelTranslucencySupported) {
+            System.out.println(
+                "Per-pixel translucency is not supported");
+                System.exit(0);
+        }
+        JDialog.setDefaultLookAndFeelDecorated(true);
         initializeComponents();
     }
 //<editor-fold defaultstate="collapsed" desc="getters/setters">
@@ -95,7 +107,7 @@ public class TranslucentFullDialog extends JDialog {
         contentPane.add(main = createContentPane(), BorderLayout.CENTER);
         setMinimumSize(new Dimension(800, 30));
         setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
-        setBackground(new Color(0, 0, 0, 0));
+        setBackground(new Color(0, 0, 0));
         setAlwaysOnTop(false);
 //        setModal(true);
         repaint();
@@ -117,19 +129,23 @@ public class TranslucentFullDialog extends JDialog {
                 Graphics2D g2 = (Graphics2D)g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 Composite old = g2.getComposite();
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+//                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
                 int red = backgroundColor.getRed();
                 int green = backgroundColor.getGreen();
                 int blue = backgroundColor.getBlue();
-                LinearGradientPaint paint = new LinearGradientPaint(0, 0, 0, getHeight(),
-                    new float[] {0.0f, 0.1f, 0.4f, 0.6f, 0.9f, 1.0f},
-                    new Color[] {new Color(0, 0, 0, 150),
-                                 new Color(red, green, blue, 191),
-                                 new Color(red, green, blue, 63),
-                                 new Color(red, green, blue, 63),
-                                 new Color(red, green, blue, 191),
-                                 new Color(0, 0, 0, 150)}
-                );
+                GradientPaint paint = new GradientPaint(
+                        0, 0, backgroundColor, 
+                        0, getHeight(), ColorUtils.adjustColorBrightness(backgroundColor, 
+                                ColorUtils.isBright(backgroundColor) ? -0.2f : 0.4f));
+//                LinearGradientPaint paint = new LinearGradientPaint(0, 0, 0, getHeight(),
+//                    new float[] {0.0f, 0.1f, 0.4f, 0.6f, 0.9f, 1.0f},
+//                    new Color[] {new Color(0, 0, 0, 150),
+//                                 new Color(red, green, blue, 191),
+//                                 new Color(red, green, blue, 63),
+//                                 new Color(red, green, blue, 63),
+//                                 new Color(red, green, blue, 191),
+//                                 new Color(0, 0, 0, 150)}
+//                );
                 if (isMainPane || !paintGradient) {
                     g2.setColor(backgroundColor);
                 } else {
@@ -200,7 +216,7 @@ public class TranslucentFullDialog extends JDialog {
 
     public static void main(String[] args) {
         TranslucentFullDialog dialog =
-                new TranslucentFullDialog(Color.ORANGE, TranslucentFullDialog.CENTER);
+                new TranslucentFullDialog(Color.black, TranslucentFullDialog.CENTER);
         dialog.setPaintGradient(true);
         dialog.setVisible(true);
     }

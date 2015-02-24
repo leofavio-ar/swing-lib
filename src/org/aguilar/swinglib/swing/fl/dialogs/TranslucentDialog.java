@@ -44,6 +44,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import org.aguilar.swinglib.utils.ColorUtils;
 
 /**
  * 
@@ -83,11 +84,15 @@ public class TranslucentDialog extends JDialog {
         this(frame, title, showBottomPane, backgroundColor, true);
     }
     public TranslucentDialog(Frame frame, String title, boolean showBottomPane, Color backgroundColor, boolean showCloseButton) {
+        this(frame, title, showBottomPane, backgroundColor, showCloseButton, 0.7f);
+    }
+    public TranslucentDialog(Frame frame, String title, boolean showBottomPane, Color backgroundColor, boolean showCloseButton, float alpha) {
         super(frame, title);
-        this.alpha = 0.7f;
+        this.alpha = alpha;
         this.showBottomPane = showBottomPane;
         this.backgroundColor = backgroundColor;
         this.showCloseButton = showCloseButton;
+        JDialog.setDefaultLookAndFeelDecorated(true);
         initializeComponents();
         installListeners();
     }
@@ -116,8 +121,8 @@ public class TranslucentDialog extends JDialog {
         closePress = new ImageIcon(getClass().getResource("/img/px16/close_pressed_red.png"));
         titleLabel = new JLabel(getTitle());
         titleLabel.setIconTextGap(10);
-        titleLabel.setFont(new java.awt.Font("Verdana", java.awt.Font.BOLD, 12));
-        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setFont(new java.awt.Font("Tahoma", java.awt.Font.BOLD, 12));
+        titleLabel.setForeground(ColorUtils.isDark(backgroundColor) ? Color.WHITE : Color.BLACK);
         try {
             BufferedImage img = ImageIO.read(getClass().getResource("/img/px16/window.png"));
             icon = getScaledImage(img, 16, 16);
@@ -138,6 +143,7 @@ public class TranslucentDialog extends JDialog {
         MouseInputHandler handler = new MouseInputHandler(this);
         titlePane.addMouseListener(handler);
         titlePane.addMouseMotionListener(handler);
+//        setBackground(null);
         setBackground(new Color(0, 0, 0, 0));
         setAlwaysOnTop(false);
         setModal(true);
@@ -301,9 +307,6 @@ public class TranslucentDialog extends JDialog {
             super.setRootPaneCheckingEnabled(true);
         }
     }
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setBackground(Color color) {
         super.setBackground(color);
@@ -313,16 +316,10 @@ public class TranslucentDialog extends JDialog {
             main.setBackground(color);
         }
     }
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Component add(Component comp) {
         return main.add(comp);
     }
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setVisible(boolean visible) {
         if (visible) {
@@ -373,9 +370,9 @@ public class TranslucentDialog extends JDialog {
         Runnable runner = new Runnable() {
             @Override
             public void run() {
-                TranslucentDialog dialog = new TranslucentDialog(new JFrame(), "Ejemplo", true, Color.DARK_GRAY);
-                dialog.setAlpha(0.5f);
-                dialog.setBackgroundColor(Color.red);
+                TranslucentDialog dialog = new TranslucentDialog(new JFrame(), "Ejemplo", true, Color.BLACK, true, 0.7f);
+//                dialog.setAlpha(0.5f);
+//                dialog.setBackgroundColor(Color.red);
                 dialog.setSize(new Dimension(300, 200));
                 dialog.setVisible(true);
             }

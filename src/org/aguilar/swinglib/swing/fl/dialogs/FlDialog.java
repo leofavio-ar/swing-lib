@@ -141,7 +141,7 @@ public class FlDialog extends JOptionPane {
      * @param duration El tiempo que tardará en desaparecer el diálogo.
      */
     public static void showFullInformationDialog(String message, int position, int duration) {
-        FullAlertDialog alert = new FullAlertDialog(new Color(0x1836a8), position, duration, false);
+        FullAlertDialog alert = new FullAlertDialog(new Color(0x54a9d9), position, duration, false); //1836a8
         alert.setForegroundColor(Color.WHITE);
         alert.showDialog(message, FULL_INFORMATION_ICON);
     }
@@ -159,7 +159,7 @@ public class FlDialog extends JOptionPane {
      * @param duration El tiempo que tardará en desaparecer el diálogo.
      */
     public static void showFullWarningDialog(String message, int position, int duration) {
-        FullAlertDialog alert = new FullAlertDialog(new Color(0xd4d719), position, duration, false);
+        FullAlertDialog alert = new FullAlertDialog(new Color(0xf6f04c), position, duration, false); //d4d719
         alert.setForegroundColor(Color.BLACK);
         alert.showDialog(message, FULL_WARNING_ICON);
     }
@@ -177,7 +177,7 @@ public class FlDialog extends JOptionPane {
      * @param duration El tiempo que durará visible el diálogo.
      */
     public static void showFullErrorDialog(String message, int position, int duration) {
-        FullAlertDialog alert = new FullAlertDialog(new Color(0xc51111), position, duration, false);
+        FullAlertDialog alert = new FullAlertDialog(new Color(0xeb7070), position, duration, false); //c51111
         alert.setForegroundColor(Color.WHITE);
         alert.showDialog(message, FULL_EXCLAMATION_ICON);
     }
@@ -206,8 +206,8 @@ public class FlDialog extends JOptionPane {
     }
 
     public static void main(String[] args) {
-        System.out.println(FlDialog.showInputDialog(null, "Ingrese el valor de algo:").toString());
-//        FlDialog.showFullInformationDialog("mensaje", FlDialog.TOP);
+//        System.out.println(FlDialog.showInputDialog(null, "Ingrese el valor de algo:").toString());
+        FlDialog.showFullWarningDialog("mensaje", FlDialog.TOP);
     }
 
 //<editor-fold defaultstate="collapsed" desc="Deprecated">

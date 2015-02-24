@@ -8,6 +8,9 @@ package org.aguilar.swinglib.swing.fl.dialogs;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GraphicsDevice;
+import static java.awt.GraphicsDevice.WindowTranslucency.TRANSLUCENT;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
@@ -16,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import org.aguilar.swinglib.behavior.effects.FaderAWT;
+import org.aguilar.swinglib.utils.ColorUtils;
 
 /**
  *
@@ -51,10 +55,19 @@ public class FullAlertDialog extends TranslucentFullDialog {
         this.fade = fade;
         this.duration = duration;
         if (fade) {
-            fadeIn = new FaderAWT(this, 30, FaderAWT.FADE_IN);
-            fadeOut = new FaderAWT(this, 30, FaderAWT.FADE_OUT);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsDevice gd = ge.getDefaultScreenDevice();
+            boolean isPerPixelTranslucencySupported = gd.isWindowTranslucencySupported(TRANSLUCENT);
+            if (!isPerPixelTranslucencySupported) {
+                System.out.println("Translucency is not supported");
+                this.fade = false;
+            } else {
+                fadeIn = new FaderAWT(this, 30, FaderAWT.FADE_IN);
+                fadeOut = new FaderAWT(this, 30, FaderAWT.FADE_OUT);
+            }
         }
         initComponents();
+        setForegroundColor(ColorUtils.isDark(backgroundColor, 100) ? Color.white : Color.black);
     }
     public void setIcon(ImageIcon icon) {
         this.icon = icon;
@@ -69,7 +82,7 @@ public class FullAlertDialog extends TranslucentFullDialog {
     private void initComponents() {
         messageLabel = new JLabel(message, icon, SwingConstants.CENTER);
         messageLabel.setIconTextGap(15);
-        messageLabel.setFont(new Font("Verdana", Font.BOLD, fontSize));
+        messageLabel.setFont(new Font("Tahoma", Font.BOLD, fontSize));
         messageLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(messageLabel, BorderLayout.CENTER);
@@ -107,8 +120,8 @@ public class FullAlertDialog extends TranslucentFullDialog {
     }
 
     public static void main(String[] args) {
-        FullAlertDialog alert = new FullAlertDialog(Color.ORANGE, FullAlertDialog.TOP, 3000, true);
-        alert.setForegroundColor(Color.WHITE);
+        FullAlertDialog alert = new FullAlertDialog(Color.black, FullAlertDialog.CENTER, 3000, true);
+//        alert.setForegroundColor(Color.WHITE);
         alert.setPaintGradient(true);
         alert.showDialog("MENSAJE DE PRUEBA");
     }
