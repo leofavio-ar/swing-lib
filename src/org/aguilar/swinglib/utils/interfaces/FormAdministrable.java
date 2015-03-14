@@ -17,11 +17,11 @@ public interface FormAdministrable {
     public final static int REGISTRANDO = 1;
     public final static int EDITANDO = 2;
     
-    /**
-     * Asigna las hotkeys relacionas a un objeto HotKeys para controlar las 
-     * acciones del teclado en el formulario.
-     */
-    public void asignarHotKeys();
+//    /**
+//     * Asigna las hotkeys relacionas a un objeto HotKeys para controlar las 
+//     * acciones del teclado en el formulario.
+//     */
+//    public void asignarHotKeys();
     /**
      * Llena la tabla de los registros actuales del formulario.
      * @param datos Un <code>List</code> que contiene los registros que se

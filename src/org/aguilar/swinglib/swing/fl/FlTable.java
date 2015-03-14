@@ -38,6 +38,7 @@ public class FlTable extends JTable {
     private String[] visibleMapKeys;
     private String[] visibleColumnNames;
     private boolean[] editableColumns;
+    private Class<?>[] columnsClass;
 
     public FlTable() {
         super(null, null, null);
@@ -209,9 +210,17 @@ public class FlTable extends JTable {
         setDataProvider(dataProvider, visibleMapKeys, visibleColumnNames, e);
     }
     public void setDataProvider(List<Map> dataProvider, String[] visibleMapKeys, String[] visibleColumnNames, boolean[] editableColumns) {
+        Class<?>[] c = new Class<?>[visibleMapKeys.length];
+        for (int i = 0; i < c.length; i ++) {
+            c[i] = null;
+        }
+        setDataProvider(dataProvider, visibleMapKeys, visibleColumnNames, editableColumns, c);
+    }
+    public void setDataProvider(List<Map> dataProvider, String[] visibleMapKeys, String[] visibleColumnNames, boolean[] editableColumns, Class<?>[] columnsClass) {
         this.visibleMapKeys = visibleMapKeys;
         this.visibleColumnNames = visibleColumnNames;
         this.editableColumns = editableColumns;
+        this.columnsClass = columnsClass;
         if (dataProvider == null) {
             this.dataProvider = new ArrayList<Map>();
             setNullDataProvider(visibleColumnNames);
@@ -223,6 +232,9 @@ public class FlTable extends JTable {
         }
         if (visibleMapKeys.length != visibleColumnNames.length) {
             throw new IllegalArgumentException("Los parámetros visibleMapKeys y visibleColumnNames tienen diferente longitud, debe ser igual");
+        }
+        if (columnsClass.length != visibleMapKeys.length) {
+            throw new IllegalArgumentException("La longitud de columnClass debe ser igual a la longitud del arreglo visibleMapKeys");
         }
         TableModel tm;
         Object[][] data = new Object[dataProvider.size()][visibleColumnNames.length];
@@ -236,12 +248,28 @@ public class FlTable extends JTable {
                 }
             }
         }
-        tm = new CustomTableModel(data, visibleColumnNames, this.editableColumns);
+        tm = new CustomTableModel(data, this.visibleColumnNames, this.editableColumns, this.columnsClass);
         this.dataProvider = dataProvider;
         setModel(tm);
         sorter = new TableRowSorter<CustomTableModel>((CustomTableModel)tm);
         setRowSorter(sorter);
         getTableHeader().setResizingAllowed(true);
+    }
+    public void setColumnClass(Class<?> c, int column) {
+        if (column < 0 || column >= this.columnsClass.length) {
+            throw new IndexOutOfBoundsException("El índice está fuera del intervalo válido: 0 <= x < " + this.visibleMapKeys.length);
+        }
+        if (columnsClass == null) {
+            throw new NullPointerException("El arreglo columnsClass es nulo");
+        }
+        ((CustomTableModel)this.getModel()).setColumnClass(c, column);
+        this.columnsClass[column] = c;
+    }
+    public void setColumnsClass(Class<?>[] columnsClass) {
+        if (columnsClass.length != this.visibleMapKeys.length) {
+            throw new IllegalArgumentException("La longitud de columnsClass debe ser igual a la longitud del arreglo visibleMapKeys");
+        }
+        this.columnsClass = columnsClass;
     }
     @Override
     public void setValueAt(Object value, int row, int column) {

@@ -31,34 +31,28 @@ public class NumberCellRenderer extends DefaultTableCellRenderer {
     private boolean marcarRenglon = false;
 
     public NumberCellRenderer(Color color, int orientation) {
-        label = new JLabel();
-        label.setOpaque(true);
-        this.color = color;
-        this.orientation = orientation;
+        this(color, orientation, false, null);
     }
     public NumberCellRenderer(Color color, boolean isInteger) {
+        this(color, NumberCellRenderer.RIGHT, isInteger, null);
+    }
+    public NumberCellRenderer(int orientation, boolean isInteger) {
+        this(null, orientation, isInteger, null);
+    }
+    public NumberCellRenderer(int orientation, boolean isInteger, String mask) {
+        this(null, orientation, isInteger, mask);
+    }
+    public NumberCellRenderer(Color color, int orientation, boolean isInteger) {
+        this(color, orientation, isInteger, null);
+    }
+    public NumberCellRenderer(Color color, int orientation, boolean isInteger, String mask) {
         label = new JLabel();
         label.setOpaque(true);
         this.color = color;
-        this.isInteger = isInteger;
-    }
-    public NumberCellRenderer(int orientation, boolean isInteger) {
-        this(orientation, isInteger, null);
-    }
-    public NumberCellRenderer(int orientation, boolean isInteger, String mask) {
-        label = new JLabel();
-        label.setOpaque(true);
         this.orientation = orientation;
         this.isInteger = isInteger;
         this.mask = mask;
-    }
-    public NumberCellRenderer(Color color, int orientation, boolean isInteger) {
-        label = new JLabel();
-        label.setOpaque(true);
-        this.color = color;
-        this.orientation = orientation;
-        this.isInteger = isInteger;
-    }
+    }    
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);

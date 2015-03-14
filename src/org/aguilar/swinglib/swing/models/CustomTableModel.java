@@ -5,14 +5,13 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Leo Aguilar
- * Trébol Informatica
- * http://www.trebolinformatica.com.mx
+ * @author Leonardo Aguilar
  */
 public class CustomTableModel  extends DefaultTableModel{
 
     private boolean editable = false;
     private boolean[] editableColumns = null;
+    private Class<?>[] columnsClass = null;
 
     public CustomTableModel () {
         super();
@@ -21,8 +20,17 @@ public class CustomTableModel  extends DefaultTableModel{
         super(columnNames, rowCount);
     }
     public CustomTableModel(Object[][] data, Object[] columnNames, boolean[] editableColumns) {
+        this(data, columnNames, editableColumns, null);
+    }
+    public CustomTableModel(Object[][] data, Object[] columnNames, boolean[] editableColumns, Class<?>[] columnsClass) {
         super(data, columnNames);
         this.editableColumns = editableColumns;
+        this.columnsClass = columnsClass;
+        Class<?>[] c = new Class<?>[columnNames.length];
+        for (int i = 0; i < c.length; i ++) {
+            c[i] = null;
+        }
+        this.columnsClass = c;
     }
     public CustomTableModel(Object[][] data, Object[] columnNames, boolean editable) {
         super(data, columnNames);
@@ -42,13 +50,23 @@ public class CustomTableModel  extends DefaultTableModel{
     }
     @Override
     public boolean isCellEditable(int row, int column) {
-        if (editableColumns == null)
+        if (editableColumns == null) {
             return editable;
+        }
         return editableColumns[column];
     }
     @Override
     public Class getColumnClass(int column) {
-        return getRowCount() > 0 ? getValueAt(0, column).getClass() : super.getClass();
+        if (columnsClass == null || columnsClass[column] == null) {
+            return getRowCount() > 0 ? getValueAt(0, column).getClass() : super.getClass();
+        }
+        return columnsClass[column];
+    }
+    public void setColumnClass(Class<?> c, int column) {
+        this.columnsClass[column] = c;
+    }
+    public void setColumnsClass(Class<?>[] columnsClass) {
+        this.columnsClass = columnsClass;
     }
     @Override
     public void setValueAt(Object value, int row, int column) {

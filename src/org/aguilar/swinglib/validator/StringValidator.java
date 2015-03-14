@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import org.aguilar.swinglib.swing.fl.FlStringField;
+import org.aguilar.swinglib.swing.fl.FlTextComponent;
 
 /**
  *
@@ -45,6 +46,42 @@ public class StringValidator extends FocusAdapter {
     public void focusLost(FocusEvent evt) {
         FlStringField fsf = (FlStringField)evt.getComponent();
         validar(fsf);
+    }
+    public void validar(FlTextComponent ftc) {
+        if (!(boolean)ftc.getControl().get("cancelado")) {
+            if (required) {
+                if (ftc.getText().trim().equals("")) {
+                    establecerEstado(REQUERIDO, ftc);
+                    return;
+                }
+            }
+            if (onlyDigits) {
+                if (ftc.isTestingNumberFormat()) {
+//                    if (!esNumeroValido(fsf.getText().trim())) {
+//                        establecerEstado(NUMEROS, fsf);
+//                        return;
+//                    }
+                    if (!Pattern.matches(NUM, ftc.getText().trim())) {
+                        establecerEstado(NUMEROS, ftc);
+                        return;
+                    }
+                }
+            }
+            if (minLenght > 0) {
+                if (ftc.getText().trim().length() < minLenght) {
+                    establecerEstado(LONG_MINIMA, ftc);
+                    return;
+                }
+            }
+        }
+        ftc.getControl().put("cancelado", Boolean.FALSE);
+        ftc.getControl().put("error", Boolean.FALSE);
+        ftc.getControl().put("mensajeError", "");
+//        fsf.setBackground(UIManager.getColor("TextField.background"));
+        ftc.setBackground(bgColor);
+        ftc.setForeground(UIManager.getColor("TextField.foreground"));
+        ftc.setToolTipText(null);
+        ToolTipManager.sharedInstance().unregisterComponent(ftc);
     }
     public void validar(FlStringField fsf) {
         if (!(boolean)fsf.getControl().get("cancelado")) {
@@ -90,6 +127,18 @@ public class StringValidator extends FocusAdapter {
             
         }
         return num != null;
+    }
+    private void establecerEstado(int msg, FlTextComponent ftc) {
+        switch (msg) {
+            case REQUERIDO  : ftc.setBackground(new Color(220, 144, 144, 255)); break;
+            case LONG_MINIMA: ftc.setBackground(new Color(144, 185, 220, 255)); break;
+            case NUMEROS    : ftc.setBackground(new Color(155, 144, 220, 255)); break;
+        }
+        ftc.getControl().put("error", Boolean.TRUE);
+        ftc.getControl().put("mensajeError", errorMessages[msg]);
+        ftc.setForeground(Color.white);
+        ToolTipManager.sharedInstance().registerComponent(ftc);
+        ftc.setToolTipText(errorMessages[msg]);
     }
     private void establecerEstado(int msg, FlStringField fsf) {
         switch (msg) {

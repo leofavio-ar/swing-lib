@@ -7,8 +7,8 @@ package org.aguilar.swinglib.swing.fl;
 
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
 import java.util.*;
+import javax.swing.*;
 import org.aguilar.swinglib.swing.misc.BarInfo;
 
 /**
@@ -21,6 +21,7 @@ public class FlAccordion extends JPanel implements ActionListener {
     private JPanel topPanel = new JPanel(new GridLayout(1, 1));
     private JPanel bottomPanel = new JPanel(new GridLayout(1, 1));
     private Map bars = new LinkedHashMap();
+    private int barsNumber = 0;
     private int visibleBar = 0;
     private JComponent visibleComponent = null;
 
@@ -28,6 +29,15 @@ public class FlAccordion extends JPanel implements ActionListener {
         this.setLayout(new BorderLayout());
         this.add(topPanel, BorderLayout.NORTH);
         this.add(bottomPanel, BorderLayout.SOUTH);
+    }
+    public int getBarsNumber() {
+        return barsNumber;
+    }
+    public void setBarsNumber(int barNumber) {
+        this.barsNumber = barNumber;
+        for (int i = 0; i < barNumber; i ++) {
+            addBar("Bar" + i, new JPanel());
+        }
     }
     /**
      * Adds the specified component to the FlAccordion and sets the bar's name
@@ -137,10 +147,12 @@ public class FlAccordion extends JPanel implements ActionListener {
         }
         this.bottomPanel.validate();
         this.validate();
+        super.repaint();
     }
     /**
      * Invoked when one of our bars is selected
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         int currentBar = 0;
         for (Iterator i = this.bars.keySet().iterator(); i.hasNext();) {

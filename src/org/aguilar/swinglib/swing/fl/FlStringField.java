@@ -29,7 +29,6 @@ public class FlStringField extends JTextField {
 
     private boolean required = false;
     private boolean onlyDigits = false;
-    
     private boolean upperCase = false;
     private boolean testingNumberFormat = false;
     private boolean defaultTextOnLostFocusIfNull = false;
@@ -70,7 +69,9 @@ public class FlStringField extends JTextField {
         selectAllOnFocus = true;
         Border border = UIManager.getBorder("TextField.border");
         JTextField dummy = new JTextField();
-        this.dummyInsets = border.getBorderInsets(dummy);
+        if (border != null) {
+            this.dummyInsets = border.getBorderInsets(dummy);
+        }
         bgColor = this.getBackground();
         addSelectAllOnFocusListener();
     }
@@ -86,12 +87,15 @@ public class FlStringField extends JTextField {
     public FlStringField(Document doc, String text, int columns) {
         super(doc, text, columns);
     }
-    private void addSelectAllOnFocusListener() {
+    protected void addSelectAllOnFocusListener() {
         if (selectAllOnFocus) {
             addFocusListener(selectAllAdapter);
         } else {
             removeFocusListener(selectAllAdapter);
         }
+    }
+    protected FocusAdapter getSelectAllAdapter() {
+        return this.selectAllAdapter;
     }
     public void setPlaceHolderGap(int placeHolderGap) {
         this.placeHolderGap = placeHolderGap;
@@ -265,7 +269,7 @@ public class FlStringField extends JTextField {
     public int getMaxLength() {
         return maxLength;
     }
-    public TextFieldAutoCompleter getActf() {
+    protected TextFieldAutoCompleter getActf() {
         return actf;
     }
     public void setValidation() {
@@ -293,7 +297,8 @@ public class FlStringField extends JTextField {
     public void setEditable(boolean editable) {
         super.setEditable(editable);
         if (!editable) {
-            bgColor = new Color(240, 240, 240);
+            this.setBackground(new Color(240, 240, 240));
+        } else {
             this.setBackground(bgColor);
         }
     }
@@ -339,6 +344,7 @@ public class FlStringField extends JTextField {
         field.setPlaceHolderText("escribe algo...");
         field.setPlaceHolderIcon(new ImageIcon(FlStringField.class.getResource("/img/px24/help.png")));
         field.setPlaceHolderGap(10);
+        field.setPreferredSize(null);
         frame.add(field);
         frame.pack();
         frame.setVisible(true);

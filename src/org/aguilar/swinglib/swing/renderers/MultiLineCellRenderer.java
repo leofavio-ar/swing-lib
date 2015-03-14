@@ -16,13 +16,14 @@ import javax.swing.table.TableCellRenderer;
  */
 public class MultiLineCellRenderer extends JTextArea implements TableCellRenderer {
 
-    private List<List<Integer>> rowColHeight = new ArrayList<List<Integer>>();
+    private List<List<Integer>> rowColHeight = new ArrayList<>();
 
     public MultiLineCellRenderer() {
         setLineWrap(true);
         setWrapStyleWord(true);
         setOpaque(true);
     }
+    @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
         boolean isSelected, boolean hasFocus, int row, int column) {
         if (isSelected) {
@@ -60,11 +61,13 @@ public class MultiLineCellRenderer extends JTextArea implements TableCellRendere
         colHeights.set(column, prefH);
         int maxH = prefH;
         for (Integer colHeight : colHeights) {
-            if (colHeight > maxH)
+            if (colHeight > maxH) {
                 maxH = colHeight;
+            }
         }
-        if (table.getRowHeight(row) != maxH)
+        if (table.getRowHeight(row) != maxH) {
             table.setRowHeight(row, maxH);
+        }
     }
     
 }

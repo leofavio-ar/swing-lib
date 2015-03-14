@@ -37,7 +37,7 @@ import org.aguilar.swinglib.swing.fl.dialogs.FlSelectDialog;
  */
 public class FlSelectField extends JPanel {
     
-    private FlStringField stringField;
+    private FlStringField stringFieldComponent;
     private JLabel lblSeleccionar;
     private JLabel lblBorrar;
     private JPanel panelBotones;
@@ -50,8 +50,10 @@ public class FlSelectField extends JPanel {
     private boolean aceptaEliminacion;
     private boolean requerido;
     private boolean mostrarErrorVacio;
+    private boolean abrirVacio;
     private Object objetoControl;
     private String procesoControl;
+    private PropertyChangeListener registroListener;
     private String tipSeleccion = "Click para seleccionar un registro";
     private String tipBorrar = "Click para eliminar la selección";
     private String mensajeCatalogoVacio = "No existen registros en el catálogo";
@@ -65,12 +67,13 @@ public class FlSelectField extends JPanel {
         registro = new HashMap();
         this.columnas = new String[] {};
         this.encabezados = new String[] {};
-        stringField.setFont(this.getFont());
+        stringFieldComponent.setFont(this.getFont());
         setMensajeCatalogoVacio(mensajeCatalogoVacio);
         setAceptaEliminacion(aceptaEliminacion);
         setMostrarErrorVacio(mostrarErrorVacio);
         setTipSeleccion(tipSeleccion);
         setTipBorrar(tipBorrar);
+        setAbrirVacio(false);
     }
     public Map getRegistro() {
         return registro;
@@ -80,12 +83,12 @@ public class FlSelectField extends JPanel {
         this.registro = registro;
         if (registro != null) {
             if (this.columnaPrincipal != null) {
-                stringField.setText(registro.containsKey(columnaPrincipal) ?
+                stringFieldComponent.setText(registro.containsKey(columnaPrincipal) ?
                         registro.get(columnaPrincipal).toString() :
                         primerColumnaTexto());
             }
         } else {
-            stringField.setText("");
+            stringFieldComponent.setText("");
         }
     }
     private String primerColumnaTexto() {
@@ -145,7 +148,7 @@ public class FlSelectField extends JPanel {
     }
     public void setRequerido(boolean requerido) {
         this.requerido = requerido;
-        this.stringField.setRequired(requerido);
+        this.stringFieldComponent.setRequired(requerido);
     }
     public void setControlDataProvider(Object objetoControl, String procesoControl, String columna, String encabezado) {
         setControlDataProvider(objetoControl, procesoControl, new String[] {columna}, new String[] {encabezado});
@@ -182,8 +185,14 @@ public class FlSelectField extends JPanel {
         this.tipBorrar = tipBorrar;
         lblBorrar.setToolTipText(tipBorrar);
     }
+    public boolean isAbrirVacio() {
+        return abrirVacio;
+    }
+    public void setAbrirVacio(boolean abrirVacio) {
+        this.abrirVacio = abrirVacio;
+    }
     public FlStringField getStringField() {
-        return this.stringField;
+        return this.stringFieldComponent;
     }
     public ArrayList<Map> getDataProvider() {
         return dataProvider;
@@ -221,16 +230,17 @@ public class FlSelectField extends JPanel {
         this.procesoControl = procesoControl;
     }
     public void setValidation() {
-        this.stringField.setValidation();
+        this.stringFieldComponent.setValidation();
     }
     public void validar() {
-        this.stringField.validar();
+        this.stringFieldComponent.validar();
     }
     @Override
     public void setFont(Font font) {
         super.setFont(font);
-        if (stringField != null) {
-            stringField.setFont(font);
+        if (stringFieldComponent != null) {
+            stringFieldComponent.setFont(font);
+            this.setPreferredSize(new Dimension(this.getPreferredSize().width, stringFieldComponent.getPreferredSize().height));
         }
     }
     @Override
@@ -275,20 +285,24 @@ public class FlSelectField extends JPanel {
                     Logger.getLogger(FlSelectField.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            boolean controlAbrir = true;
             if (this.dataProvider.isEmpty() && this.mostrarErrorVacio) {
                 FlDialog.showFullWarningDialog(this.mensajeCatalogoVacio);
+                controlAbrir = this.abrirVacio;
             }
-            FlSelectDialog selectDialog = new FlSelectDialog(this.dataProvider, "", this.columnas, this.encabezados, false);
-            selectDialog.setVisible(true);
-            if (selectDialog.isOk()) {
-                Map aux = selectDialog.getSeleccionado().get(0);
-                setRegistro(selectDialog.getSeleccionado().get(0));
-                if (this.columnaPrincipal != null) {
-                    stringField.setText(registro.containsKey(this.columnaPrincipal) ? 
-                            aux.get(this.columnaPrincipal).toString() :
-                            primerColumnaTexto());
-                } else {
-                    stringField.setText(primerColumnaTexto());
+            if (controlAbrir) {
+                FlSelectDialog selectDialog = new FlSelectDialog(this.dataProvider, "", this.columnas, this.encabezados, false);
+                selectDialog.setVisible(true);
+                if (selectDialog.isOk()) {
+                    Map aux = selectDialog.getSeleccionado().get(0);
+                    setRegistro(selectDialog.getSeleccionado().get(0));
+                    if (this.columnaPrincipal != null) {
+                        stringFieldComponent.setText(registro.containsKey(this.columnaPrincipal) ? 
+                                aux.get(this.columnaPrincipal).toString() :
+                                primerColumnaTexto());
+                    } else {
+                        stringFieldComponent.setText(primerColumnaTexto());
+                    }
                 }
             }
         }
@@ -299,12 +313,17 @@ public class FlSelectField extends JPanel {
         }
     }
     public void agregarRegistroListener(PropertyChangeListener listener) {
-        this.addPropertyChangeListener("registro", listener);
+        registroListener = listener;
+        this.addPropertyChangeListener("registro", registroListener);
+    }
+    public void eliminarRegistroListener() {
+        this.removePropertyChangeListener("registro", registroListener);
+        registroListener = null;
     }
     @SuppressWarnings("unchecked")
     private void initComponents() {
-        stringField = new FlStringField();
-        stringField.setEditable(false);
+        stringFieldComponent = new FlStringField();
+        stringFieldComponent.setEditable(false);
         lblSeleccionar = new JLabel(new ImageIcon(this.getClass().getResource("/img/px21/buscar.png")));
         lblSeleccionar.setOpaque(false);
         lblSeleccionar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -331,7 +350,7 @@ public class FlSelectField extends JPanel {
         this.setLayout(new BorderLayout(5, 0));
         this.setPreferredSize(new Dimension(200, 21));
         this.setOpaque(false);
-        this.add(stringField, BorderLayout.CENTER);
+        this.add(stringFieldComponent, BorderLayout.CENTER);
         this.add(panelBotones, BorderLayout.EAST);
     }
     
