@@ -301,6 +301,7 @@ public class FlLabeledFieldBeanInfo extends SimpleBeanInfo {
             properties[PROPERTY_UI] = new PropertyDescriptor ( "UI", org.aguilar.swinglib.swing.fl.FlLabeledField.class, "getUI", "setUI" ); // NOI18N
             properties[PROPERTY_UIClassID] = new PropertyDescriptor ( "UIClassID", org.aguilar.swinglib.swing.fl.FlLabeledField.class, "getUIClassID", null ); // NOI18N
             properties[PROPERTY_upperCase] = new PropertyDescriptor ( "upperCase", org.aguilar.swinglib.swing.fl.FlLabeledField.class, "isUpperCase", "setUpperCase" ); // NOI18N
+            properties[PROPERTY_upperCase].setPreferred ( true );
             properties[PROPERTY_valid] = new PropertyDescriptor ( "valid", org.aguilar.swinglib.swing.fl.FlLabeledField.class, "isValid", null ); // NOI18N
             properties[PROPERTY_validateRoot] = new PropertyDescriptor ( "validateRoot", org.aguilar.swinglib.swing.fl.FlLabeledField.class, "isValidateRoot", null ); // NOI18N
             properties[PROPERTY_verifyInputWhenFocusTarget] = new PropertyDescriptor ( "verifyInputWhenFocusTarget", org.aguilar.swinglib.swing.fl.FlLabeledField.class, "getVerifyInputWhenFocusTarget", "setVerifyInputWhenFocusTarget" ); // NOI18N
@@ -484,35 +485,34 @@ public class FlLabeledFieldBeanInfo extends SimpleBeanInfo {
     private static final int METHOD_requestDefaultFocus120 = 120;
     private static final int METHOD_requestFocus121 = 121;
     private static final int METHOD_requestFocus122 = 122;
-    private static final int METHOD_requestFocusInWindow123 = 123;
-    private static final int METHOD_resetKeyboardActions124 = 124;
-    private static final int METHOD_reshape125 = 125;
+    private static final int METHOD_resetKeyboardActions123 = 123;
+    private static final int METHOD_reshape124 = 124;
+    private static final int METHOD_resize125 = 125;
     private static final int METHOD_resize126 = 126;
-    private static final int METHOD_resize127 = 127;
-    private static final int METHOD_revalidate128 = 128;
-    private static final int METHOD_scrollRectToVisible129 = 129;
-    private static final int METHOD_setBounds130 = 130;
-    private static final int METHOD_setComponentZOrder131 = 131;
-    private static final int METHOD_setDefaultLocale132 = 132;
-    private static final int METHOD_setValidation133 = 133;
+    private static final int METHOD_revalidate127 = 127;
+    private static final int METHOD_scrollRectToVisible128 = 128;
+    private static final int METHOD_setBounds129 = 129;
+    private static final int METHOD_setComponentZOrder130 = 130;
+    private static final int METHOD_setDefaultLocale131 = 131;
+    private static final int METHOD_setValidation132 = 132;
+    private static final int METHOD_show133 = 133;
     private static final int METHOD_show134 = 134;
-    private static final int METHOD_show135 = 135;
-    private static final int METHOD_size136 = 136;
-    private static final int METHOD_toString137 = 137;
-    private static final int METHOD_transferFocus138 = 138;
-    private static final int METHOD_transferFocusBackward139 = 139;
-    private static final int METHOD_transferFocusDownCycle140 = 140;
-    private static final int METHOD_transferFocusUpCycle141 = 141;
-    private static final int METHOD_unregisterKeyboardAction142 = 142;
-    private static final int METHOD_update143 = 143;
-    private static final int METHOD_updateUI144 = 144;
-    private static final int METHOD_validar145 = 145;
-    private static final int METHOD_validate146 = 146;
+    private static final int METHOD_size135 = 135;
+    private static final int METHOD_toString136 = 136;
+    private static final int METHOD_transferFocus137 = 137;
+    private static final int METHOD_transferFocusBackward138 = 138;
+    private static final int METHOD_transferFocusDownCycle139 = 139;
+    private static final int METHOD_transferFocusUpCycle140 = 140;
+    private static final int METHOD_unregisterKeyboardAction141 = 141;
+    private static final int METHOD_update142 = 142;
+    private static final int METHOD_updateUI143 = 143;
+    private static final int METHOD_validar144 = 144;
+    private static final int METHOD_validate145 = 145;
 
     // Method array 
     /*lazy MethodDescriptor*/
     private static MethodDescriptor[] getMdescriptor(){
-        MethodDescriptor[] methods = new MethodDescriptor[147];
+        MethodDescriptor[] methods = new MethodDescriptor[146];
     
         try {
             methods[METHOD_action0] = new MethodDescriptor(java.awt.Component.class.getMethod("action", new Class[] {java.awt.Event.class, java.lang.Object.class})); // NOI18N
@@ -761,54 +761,52 @@ public class FlLabeledFieldBeanInfo extends SimpleBeanInfo {
             methods[METHOD_requestFocus121].setDisplayName ( "" );
             methods[METHOD_requestFocus122] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("requestFocus", new Class[] {boolean.class})); // NOI18N
             methods[METHOD_requestFocus122].setDisplayName ( "" );
-            methods[METHOD_requestFocusInWindow123] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("requestFocusInWindow", new Class[] {})); // NOI18N
-            methods[METHOD_requestFocusInWindow123].setDisplayName ( "" );
-            methods[METHOD_resetKeyboardActions124] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("resetKeyboardActions", new Class[] {})); // NOI18N
-            methods[METHOD_resetKeyboardActions124].setDisplayName ( "" );
-            methods[METHOD_reshape125] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("reshape", new Class[] {int.class, int.class, int.class, int.class})); // NOI18N
-            methods[METHOD_reshape125].setDisplayName ( "" );
-            methods[METHOD_resize126] = new MethodDescriptor(java.awt.Component.class.getMethod("resize", new Class[] {int.class, int.class})); // NOI18N
+            methods[METHOD_resetKeyboardActions123] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("resetKeyboardActions", new Class[] {})); // NOI18N
+            methods[METHOD_resetKeyboardActions123].setDisplayName ( "" );
+            methods[METHOD_reshape124] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("reshape", new Class[] {int.class, int.class, int.class, int.class})); // NOI18N
+            methods[METHOD_reshape124].setDisplayName ( "" );
+            methods[METHOD_resize125] = new MethodDescriptor(java.awt.Component.class.getMethod("resize", new Class[] {int.class, int.class})); // NOI18N
+            methods[METHOD_resize125].setDisplayName ( "" );
+            methods[METHOD_resize126] = new MethodDescriptor(java.awt.Component.class.getMethod("resize", new Class[] {java.awt.Dimension.class})); // NOI18N
             methods[METHOD_resize126].setDisplayName ( "" );
-            methods[METHOD_resize127] = new MethodDescriptor(java.awt.Component.class.getMethod("resize", new Class[] {java.awt.Dimension.class})); // NOI18N
-            methods[METHOD_resize127].setDisplayName ( "" );
-            methods[METHOD_revalidate128] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("revalidate", new Class[] {})); // NOI18N
-            methods[METHOD_revalidate128].setDisplayName ( "" );
-            methods[METHOD_scrollRectToVisible129] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("scrollRectToVisible", new Class[] {java.awt.Rectangle.class})); // NOI18N
-            methods[METHOD_scrollRectToVisible129].setDisplayName ( "" );
-            methods[METHOD_setBounds130] = new MethodDescriptor(java.awt.Component.class.getMethod("setBounds", new Class[] {int.class, int.class, int.class, int.class})); // NOI18N
-            methods[METHOD_setBounds130].setDisplayName ( "" );
-            methods[METHOD_setComponentZOrder131] = new MethodDescriptor(java.awt.Container.class.getMethod("setComponentZOrder", new Class[] {java.awt.Component.class, int.class})); // NOI18N
-            methods[METHOD_setComponentZOrder131].setDisplayName ( "" );
-            methods[METHOD_setDefaultLocale132] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("setDefaultLocale", new Class[] {java.util.Locale.class})); // NOI18N
-            methods[METHOD_setDefaultLocale132].setDisplayName ( "" );
-            methods[METHOD_setValidation133] = new MethodDescriptor(org.aguilar.swinglib.swing.fl.FlLabeledField.class.getMethod("setValidation", new Class[] {})); // NOI18N
-            methods[METHOD_setValidation133].setDisplayName ( "" );
-            methods[METHOD_show134] = new MethodDescriptor(java.awt.Component.class.getMethod("show", new Class[] {})); // NOI18N
+            methods[METHOD_revalidate127] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("revalidate", new Class[] {})); // NOI18N
+            methods[METHOD_revalidate127].setDisplayName ( "" );
+            methods[METHOD_scrollRectToVisible128] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("scrollRectToVisible", new Class[] {java.awt.Rectangle.class})); // NOI18N
+            methods[METHOD_scrollRectToVisible128].setDisplayName ( "" );
+            methods[METHOD_setBounds129] = new MethodDescriptor(java.awt.Component.class.getMethod("setBounds", new Class[] {int.class, int.class, int.class, int.class})); // NOI18N
+            methods[METHOD_setBounds129].setDisplayName ( "" );
+            methods[METHOD_setComponentZOrder130] = new MethodDescriptor(java.awt.Container.class.getMethod("setComponentZOrder", new Class[] {java.awt.Component.class, int.class})); // NOI18N
+            methods[METHOD_setComponentZOrder130].setDisplayName ( "" );
+            methods[METHOD_setDefaultLocale131] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("setDefaultLocale", new Class[] {java.util.Locale.class})); // NOI18N
+            methods[METHOD_setDefaultLocale131].setDisplayName ( "" );
+            methods[METHOD_setValidation132] = new MethodDescriptor(org.aguilar.swinglib.swing.fl.FlLabeledField.class.getMethod("setValidation", new Class[] {})); // NOI18N
+            methods[METHOD_setValidation132].setDisplayName ( "" );
+            methods[METHOD_show133] = new MethodDescriptor(java.awt.Component.class.getMethod("show", new Class[] {})); // NOI18N
+            methods[METHOD_show133].setDisplayName ( "" );
+            methods[METHOD_show134] = new MethodDescriptor(java.awt.Component.class.getMethod("show", new Class[] {boolean.class})); // NOI18N
             methods[METHOD_show134].setDisplayName ( "" );
-            methods[METHOD_show135] = new MethodDescriptor(java.awt.Component.class.getMethod("show", new Class[] {boolean.class})); // NOI18N
-            methods[METHOD_show135].setDisplayName ( "" );
-            methods[METHOD_size136] = new MethodDescriptor(java.awt.Component.class.getMethod("size", new Class[] {})); // NOI18N
-            methods[METHOD_size136].setDisplayName ( "" );
-            methods[METHOD_toString137] = new MethodDescriptor(java.awt.Component.class.getMethod("toString", new Class[] {})); // NOI18N
-            methods[METHOD_toString137].setDisplayName ( "" );
-            methods[METHOD_transferFocus138] = new MethodDescriptor(java.awt.Component.class.getMethod("transferFocus", new Class[] {})); // NOI18N
-            methods[METHOD_transferFocus138].setDisplayName ( "" );
-            methods[METHOD_transferFocusBackward139] = new MethodDescriptor(java.awt.Component.class.getMethod("transferFocusBackward", new Class[] {})); // NOI18N
-            methods[METHOD_transferFocusBackward139].setDisplayName ( "" );
-            methods[METHOD_transferFocusDownCycle140] = new MethodDescriptor(java.awt.Container.class.getMethod("transferFocusDownCycle", new Class[] {})); // NOI18N
-            methods[METHOD_transferFocusDownCycle140].setDisplayName ( "" );
-            methods[METHOD_transferFocusUpCycle141] = new MethodDescriptor(java.awt.Component.class.getMethod("transferFocusUpCycle", new Class[] {})); // NOI18N
-            methods[METHOD_transferFocusUpCycle141].setDisplayName ( "" );
-            methods[METHOD_unregisterKeyboardAction142] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("unregisterKeyboardAction", new Class[] {javax.swing.KeyStroke.class})); // NOI18N
-            methods[METHOD_unregisterKeyboardAction142].setDisplayName ( "" );
-            methods[METHOD_update143] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("update", new Class[] {java.awt.Graphics.class})); // NOI18N
-            methods[METHOD_update143].setDisplayName ( "" );
-            methods[METHOD_updateUI144] = new MethodDescriptor(javax.swing.JPanel.class.getMethod("updateUI", new Class[] {})); // NOI18N
-            methods[METHOD_updateUI144].setDisplayName ( "" );
-            methods[METHOD_validar145] = new MethodDescriptor(org.aguilar.swinglib.swing.fl.FlLabeledField.class.getMethod("validar", new Class[] {})); // NOI18N
-            methods[METHOD_validar145].setDisplayName ( "" );
-            methods[METHOD_validate146] = new MethodDescriptor(java.awt.Container.class.getMethod("validate", new Class[] {})); // NOI18N
-            methods[METHOD_validate146].setDisplayName ( "" );
+            methods[METHOD_size135] = new MethodDescriptor(java.awt.Component.class.getMethod("size", new Class[] {})); // NOI18N
+            methods[METHOD_size135].setDisplayName ( "" );
+            methods[METHOD_toString136] = new MethodDescriptor(java.awt.Component.class.getMethod("toString", new Class[] {})); // NOI18N
+            methods[METHOD_toString136].setDisplayName ( "" );
+            methods[METHOD_transferFocus137] = new MethodDescriptor(java.awt.Component.class.getMethod("transferFocus", new Class[] {})); // NOI18N
+            methods[METHOD_transferFocus137].setDisplayName ( "" );
+            methods[METHOD_transferFocusBackward138] = new MethodDescriptor(java.awt.Component.class.getMethod("transferFocusBackward", new Class[] {})); // NOI18N
+            methods[METHOD_transferFocusBackward138].setDisplayName ( "" );
+            methods[METHOD_transferFocusDownCycle139] = new MethodDescriptor(java.awt.Container.class.getMethod("transferFocusDownCycle", new Class[] {})); // NOI18N
+            methods[METHOD_transferFocusDownCycle139].setDisplayName ( "" );
+            methods[METHOD_transferFocusUpCycle140] = new MethodDescriptor(java.awt.Component.class.getMethod("transferFocusUpCycle", new Class[] {})); // NOI18N
+            methods[METHOD_transferFocusUpCycle140].setDisplayName ( "" );
+            methods[METHOD_unregisterKeyboardAction141] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("unregisterKeyboardAction", new Class[] {javax.swing.KeyStroke.class})); // NOI18N
+            methods[METHOD_unregisterKeyboardAction141].setDisplayName ( "" );
+            methods[METHOD_update142] = new MethodDescriptor(javax.swing.JComponent.class.getMethod("update", new Class[] {java.awt.Graphics.class})); // NOI18N
+            methods[METHOD_update142].setDisplayName ( "" );
+            methods[METHOD_updateUI143] = new MethodDescriptor(javax.swing.JPanel.class.getMethod("updateUI", new Class[] {})); // NOI18N
+            methods[METHOD_updateUI143].setDisplayName ( "" );
+            methods[METHOD_validar144] = new MethodDescriptor(org.aguilar.swinglib.swing.fl.FlLabeledField.class.getMethod("validar", new Class[] {})); // NOI18N
+            methods[METHOD_validar144].setDisplayName ( "" );
+            methods[METHOD_validate145] = new MethodDescriptor(java.awt.Container.class.getMethod("validate", new Class[] {})); // NOI18N
+            methods[METHOD_validate145].setDisplayName ( "" );
         }
         catch( Exception e) {}//GEN-HEADEREND:Methods
 

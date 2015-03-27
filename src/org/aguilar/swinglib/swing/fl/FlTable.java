@@ -398,6 +398,9 @@ public class FlTable extends JTable {
     public void setColumnCellEditor(TableCellEditor cellEditor, int col) {
         getColumnModel().getColumn(col).setCellEditor(cellEditor);
     }
+    public void setColumnHeaderRenderer(TableCellRenderer headerRenderer, int col) { 
+        getColumnModel().getColumn(col).setHeaderRenderer(headerRenderer);
+    }
     public void filter(String expression) {
         sorter.setRowFilter(RowFilter.regexFilter("(?i).*" + expression + ".*"));
         sorter.setSortKeys(null);

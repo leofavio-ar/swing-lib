@@ -50,9 +50,16 @@ public class FlLabeledField extends JPanel {
     public void setLabel(String label) {
         labelComponent.setText(label);
         labelComponent.setPreferredSize(null);
+        if (stringFieldComponent.getFieldName().equals("")) {
+            setFieldName(label.replace(":", ""));
+        }
         if (isAnchoFijo()) {
             recalcular();
         }
+    }
+    @Override
+    public boolean requestFocusInWindow() {
+        return stringFieldComponent.requestFocusInWindow();
     }
     public String getText() {
         return stringFieldComponent.getText();
