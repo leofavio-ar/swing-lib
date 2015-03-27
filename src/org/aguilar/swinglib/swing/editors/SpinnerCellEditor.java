@@ -27,6 +27,9 @@ public class SpinnerCellEditor extends AbstractCellEditor implements TableCellEd
     public SpinnerCellEditor() {
         this(0, 0, Integer.MAX_VALUE, null);
     }
+    public SpinnerCellEditor(int min, int max) {
+        this(min, max, 1, null);
+    }
     public SpinnerCellEditor(int min, int max, Number incremento) {
         this(min, max, incremento, null);
     }
@@ -34,13 +37,14 @@ public class SpinnerCellEditor extends AbstractCellEditor implements TableCellEd
         SpinnerNumberModel model = new SpinnerNumberModel(min, min, max, incremento);
         spinner.setModel(model);
         spinner.setForeground(Color.GREEN);
-        ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().setBackground(bgColor);
+        setBgColor(bgColor);
     }
     public Color getBgColor() {
         return bgColor;
     }
     public void setBgColor(Color bgColor) {
         this.bgColor = bgColor;
+        ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().setBackground(bgColor);
     }
     @Override
     public boolean isCellEditable(EventObject evt) {

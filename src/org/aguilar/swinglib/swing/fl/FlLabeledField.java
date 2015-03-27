@@ -6,10 +6,12 @@
 package org.aguilar.swinglib.swing.fl;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -18,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.aguilar.swinglib.swing.misc.TextFieldAutoCompleter;
 import org.aguilar.swinglib.utils.AlineacionLabel;
+import org.aguilar.swinglib.utils.AlineacionStringField;
 import org.aguilar.swinglib.utils.PosicionLabel;
 
 /**
@@ -32,6 +35,7 @@ public class FlLabeledField extends JPanel {
     private boolean anchoFijo;
     private PosicionLabel posicionLabel = PosicionLabel.LEFT;
     private AlineacionLabel alineacionLabel = AlineacionLabel.TRAILING;
+    private AlineacionStringField alineacionStringField = AlineacionStringField.TRAILING;
     
     public FlLabeledField() {
         super();
@@ -119,14 +123,27 @@ public class FlLabeledField extends JPanel {
                 labelComponent.setHorizontalAlignment(JLabel.CENTER); break;
         }
     }
+    public AlineacionStringField getAlineacionStringField() {
+        return alineacionStringField;
+    }
+    public void setAlineacionStringField(AlineacionStringField alineacionStringField) {
+        this.alineacionStringField = alineacionStringField;
+        switch (this.alineacionStringField) {
+            case LEFT:
+            case LEADING:
+                stringFieldComponent.setHorizontalAlignment(FlStringField.LEADING); break;
+            case RIGHT:
+            case TRAILING:
+                stringFieldComponent.setHorizontalAlignment(FlStringField.TRAILING); break;
+            case CENTER:
+                stringFieldComponent.setHorizontalAlignment(FlStringField.CENTER); break;
+        }
+    }
     private void ajustarLabel() {
         labelComponent.setPreferredSize(null);
-//        stringFieldComponent.setSize(this.getPreferredSize().width - anchoLabel, stringFieldComponent.getPreferredSize().height);
         if (isAnchoFijo()) {
             labelComponent.setPreferredSize(new Dimension(anchoLabel, labelComponent.getPreferredSize().height));
-//            stringFieldComponent.setSize(this.getPreferredSize().width - anchoLabel, stringFieldComponent.getPreferredSize().height);
         }
-//        this.revalidate();
     }
     private void recalcular() {
         labelComponent.setPreferredSize(null);
@@ -147,6 +164,17 @@ public class FlLabeledField extends JPanel {
     public Font getLabelFont() {
         return labelComponent.getFont();
     }
+    public void setLabelForeground(Color foreground) {
+        if (labelComponent != null) {
+            labelComponent.setForeground(foreground);
+        }
+    }
+    public Color getLabelForeground() {
+        return labelComponent.getForeground();
+    }
+    public JLabel getLabelComponent() {
+        return labelComponent;
+    }
     public void setStringFieldFont(Font font) {
         if (stringFieldComponent != null) {
             stringFieldComponent.setFont(font);
@@ -155,16 +183,36 @@ public class FlLabeledField extends JPanel {
     public Font getStringFieldFont() {
         return stringFieldComponent.getFont();
     }
+    public void setStringFieldForeground(Color foreground) {
+        if (stringFieldComponent != null) {
+            stringFieldComponent.setForeground(foreground);
+        }
+    }
+    public Color getStringFieldForeground() {
+        return stringFieldComponent.getForeground();
+    }
+    public FlStringField getStringFieldComponent() {
+        return stringFieldComponent;
+    }
     @Override
     public void setFont(Font font) {
         super.setFont(font);
+//        if (!(labelComponent == null && stringFieldComponent == null)) {
+//            stringFieldComponent.setFont(font);
+//            labelComponent.setFont(font);
+//            recalcular();
+//            this.setPreferredSize(new Dimension(this.getPreferredSize().width, stringFieldComponent.getPreferredSize().height));
+//        }
+//        this.revalidate();
+    }
+    @Override
+    public void setForeground(Color fg) {
+        super.setForeground(fg);
         if (!(labelComponent == null && stringFieldComponent == null)) {
-            stringFieldComponent.setFont(font);
-            labelComponent.setFont(font);
+            stringFieldComponent.setForeground(fg);
+            labelComponent.setForeground(fg);
             recalcular();
-            this.setPreferredSize(new Dimension(this.getPreferredSize().width, stringFieldComponent.getPreferredSize().height));
         }
-        this.revalidate();
     }
     @Override
     public void setSize(int width, int height) {
@@ -283,6 +331,10 @@ public class FlLabeledField extends JPanel {
     }
     public void setEditable(boolean editable) {
         stringFieldComponent.setEditable(editable);
+    }
+    @Override
+    public void addFocusListener(FocusListener l) {
+        stringFieldComponent.addFocusListener(l);
     }
     
     @SuppressWarnings("unchecked")

@@ -9,6 +9,8 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.beans.PropertyVetoException;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,7 +35,6 @@ import javax.swing.event.InternalFrameEvent;
  */
 public class FlDesktopPane extends JDesktopPane {
 
-    private static final long serialVersionUID = -5746013654602797327L;
     public static enum SizeMode {
         NORMAL, STRETCH, TILE
     }
@@ -69,12 +70,20 @@ public class FlDesktopPane extends JDesktopPane {
     public void setMenu(JMenu menu) {
         this.menu = menu;
     }
+    public void setImage(String imagePath) {
+        setImage(imagePath != null ? new ImageIcon(getClass().getResource(imagePath)).getImage() : null);
+    }
+    public void setImage(File imageFile) {
+        Image aux;
+        try {
+            aux = new ImageIcon(imageFile.getCanonicalPath()).getImage();
+        } catch (IOException ex) {
+            aux = null;
+        }
+        setImage(aux);
+    }
     public void setImage(Image image) {
         this.image = image;
-        repaint();
-    }
-    public void setImage(String imagePath) {
-        image = imagePath != null ? new ImageIcon(getClass().getResource(imagePath)).getImage() : null;
         repaint();
     }
     public void setImageSizeMode(SizeMode imageSizeMode) {

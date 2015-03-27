@@ -38,6 +38,7 @@ public class FlTable extends JTable {
     private String[] visibleMapKeys;
     private String[] visibleColumnNames;
     private boolean[] editableColumns;
+//    private List<boolean[]> editable;
     private Class<?>[] columnsClass;
 
     public FlTable() {
@@ -122,6 +123,13 @@ public class FlTable extends JTable {
             }
         });
     }
+//    @Override
+//    public boolean isCellEditable(int i, int i1) {
+//        return editable.get(i)[i1];
+//    }
+//    public void setCellEditable(int r, int c, boolean ed) {
+//        editable.get(r)[c] = ed;
+//    }
     private void addCellLostFocusListener() {
         final FlTable thisTable = this;
         thisTable.addFocusListener(new FocusAdapter() {
@@ -156,8 +164,9 @@ public class FlTable extends JTable {
     }
     private void setNullDataProvider(String[] columns) {
         TableModel tm = new CustomTableModel(new Object[][] {}, columns, editableColumns);
-        if (columns.length != 0)
+        if (columns.length != 0) {
             this.visibleColumnNames = columns;
+        }
         setModel(tm);
         sorter = new TableRowSorter<CustomTableModel>((CustomTableModel)tm);
         setRowSorter(sorter);
@@ -179,8 +188,9 @@ public class FlTable extends JTable {
         String[] mapKeys = new String[dataProvider.get(0).size()];
         int i = 0;
         Set<Entry> set = dataProvider.get(0).entrySet();
-        for (Entry entry : set)
+        for (Entry entry : set) {
             mapKeys[i ++] = entry.getKey().toString();
+        }
         setDataProvider(dataProvider, mapKeys, mapKeys, editable);
     }
     public void setDataProvider(ArrayList<Map> dataProvider, String[] visibleMapKeys) {
@@ -238,6 +248,11 @@ public class FlTable extends JTable {
         }
         TableModel tm;
         Object[][] data = new Object[dataProvider.size()][visibleColumnNames.length];
+//        editable = new ArrayList<>();
+//        for (int r = 0; r < dataProvider.size(); r ++) {
+//            editable.add(new boolean[visibleColumnNames.length]);
+//            System.arraycopy(editableColumns, 0, editable.get(r), 0, visibleColumnNames.length);
+//        }
         for (int row = 0; row < dataProvider.size(); row ++) {
             Iterator it = dataProvider.get(row).entrySet().iterator();
             List<String> keys = java.util.Arrays.asList(visibleMapKeys);
@@ -318,6 +333,8 @@ public class FlTable extends JTable {
         Object[] r = new Object[visibleMapKeys.length];
         for (int i = 0; i < visibleMapKeys.length; i ++) {
             r[i] = row.get(visibleMapKeys[i]);
+//            editable.add(new boolean[visibleColumnNames.length]);
+//            System.arraycopy(editableColumns, 0, editable.get(editable.size() - 1), 0, visibleColumnNames.length);
         }
         ((CustomTableModel)getModel()).addRow(r);
         dataProvider.add(row);
@@ -325,6 +342,7 @@ public class FlTable extends JTable {
     public void removeRow(int row) {
         dataProvider.remove(convertRowIndexToModel(row));
         ((CustomTableModel)getModel()).removeRow(convertRowIndexToModel(row));
+//        editable.remove(convertRowIndexToModel(row));
     }
     public void removeSelectedRow() {
         removeRow(this.getSelectedRow());

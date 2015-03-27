@@ -25,6 +25,7 @@ public class NumberCellRenderer extends DefaultTableCellRenderer {
     private DecimalFormat df = new DecimalFormat("#,###,##0.00");
     private final String NUM = "\\-?\\d+(\\.\\d+)?(E?\\d+)?";
     private Color color = null;
+    private Color original = null;
     private boolean isInteger = false;
     private int orientation = NumberCellRenderer.RIGHT;
     private String mask = null;
@@ -49,17 +50,25 @@ public class NumberCellRenderer extends DefaultTableCellRenderer {
         label = new JLabel();
         label.setOpaque(true);
         this.color = color;
+        this.original = color;
         this.orientation = orientation;
         this.isInteger = isInteger;
         this.mask = mask;
-    }    
+    }
+    public Color getColor() {
+        return color;
+    }
+    public void setColor(Color color) {
+        this.color = color;
+    }
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         if (isSelected) {
             label.setForeground(table.getSelectionForeground());
-            label.setBackground(table.getSelectionBackground());
+            label.setBackground(color = table.getSelectionBackground());
         } else {
+            color = original;
             label.setForeground(table.getForeground());
             label.setBackground(color != null ? color : null);
         }
@@ -68,7 +77,7 @@ public class NumberCellRenderer extends DefaultTableCellRenderer {
             setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));
             if (table.isCellEditable(row, column)) {
                 setForeground(UIManager.getColor("Table.focusCellForeground"));
-                setBackground(UIManager.getColor("Table.focusCellBackground"));
+                setBackground(color = UIManager.getColor("Table.focusCellBackground"));
             }
         } else {
             setBorder(new EmptyBorder(1, 2, 1, 2));
@@ -93,7 +102,7 @@ public class NumberCellRenderer extends DefaultTableCellRenderer {
                 }
             }
         } else {
-            label.setText("");
+            label.setText("0.00");
         }
         return label;
     }
