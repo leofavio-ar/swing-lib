@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import org.aguilar.swinglib.swing.fl.dialogs.TranslucentDialog;
 import org.aguilar.swinglib.utils.interfaces.FormAdministrable;
+import org.aguilar.swinglib.utils.interfaces.HotKeysAplicable;
 
 /**
  * Representa los <code>KeyStroke</code> que disparan las funciones de un componente.
@@ -47,26 +48,32 @@ public class HotKeys {
     private Object componente;
     private String objetoControl;
    
-    /**
-     * Crea un objeto <code>HotKeys</code> para controlar los eventos de teclas en un componente que 
-     * implemente la interface <code>FormAdministrable</code> y sea capaz de manejar un <code>ActionMap</code>.
-     * Por defecto se asigna el objeto de nombre "control" del componente para efectos de controlar los 
-     * estados en los que puede o no ejecutarse la función asignada a las acciones de los <code>KeyStroke</code>.
-     * @param componente Un objeto <code>FormAdministrable</code> que contenga un <code>ActionMap</code>.
-     */
-    public HotKeys(FormAdministrable componente) {
-        this((Object)componente, "control");
-    }
-    /**
-     * Crea un objeto <code>HotKeys</code> para controlar los eventos de teclas en un componente que 
-     * implemente la interface <code>FormAdministrable</code> y sea capaz de manejar un <code>ActionMap</code>.
-     * @param componente Un objeto <code>FormAdministrable</code> que contenga un <code>ActionMap</code>.
-     * @param objetoControl El objeto del componente que controla los estados en los que puede o no ejecutarse
-     * la función asignada a las acciones de los <code>KeyStroke</code>.
-     */
-    public HotKeys(FormAdministrable componente, String objetoControl) {
-        this((Object)componente, objetoControl);
-    }
+//    /**
+//     * Crea un objeto <code>HotKeys</code> para controlar los eventos de teclas en un componente que 
+//     * implemente la interface <code>HotKeysAplicable</code> y sea capaz de manejar un <code>ActionMap</code>.
+//     * Por defecto se asigna el objeto de nombre "control" del componente para efectos de controlar los 
+//     * estados en los que puede o no ejecutarse la función asignada a las acciones de los <code>KeyStroke</code>.
+//     * @param componente Un objeto <code>HotKeysAplicable</code>.
+//     */
+//    public HotKeys(HotKeysAplicable componente) {
+//        this(componente.obtenerComponentePrincipal(), "control");
+//    }
+//    /**
+//     * Crea un objeto <code>HotKeys</code> para controlar los eventos de teclas en un componente que 
+//     * implemente la interface <code>HotKeysAplicable</code> y sea capaz de manejar un <code>ActionMap</code>.
+//     * @param componente Un objeto <code>HotKeysAplicable</code>.
+//     * @param objetoControl El objeto del componente que controla los estados en los que puede o no ejecutarse
+//     * la función asignada a las acciones de los <code>KeyStroke</code>.
+//     */
+//    public HotKeys(HotKeysAplicable componente, String objetoControl) {
+//        this(componente.obtenerComponentePrincipal(), objetoControl);
+//    }
+//    public HotKeys(FormAdministrable componente) {
+//        this((Object)componente, "control");
+//    }
+//    public HotKeys(FormAdministrable componente, String objetoControl) {
+//        this((Object)componente, objetoControl);
+//    }
     /**
      * Crea un objeto <code>HotKeys</code> para controlar los eventos de teclas en un componente que sea
      * capaz de manejar un <code>ActionMap</code>. Por defecto se asigna el objeto de nombre "control"

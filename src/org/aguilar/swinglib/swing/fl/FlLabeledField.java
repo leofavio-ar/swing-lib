@@ -12,6 +12,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyListener;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -343,7 +344,11 @@ public class FlLabeledField extends JPanel {
     public void addFocusListener(FocusListener l) {
         stringFieldComponent.addFocusListener(l);
     }
-    
+    @Override
+    public synchronized void addKeyListener(KeyListener l) {
+        stringFieldComponent.addKeyListener(l);
+    }
+
     @SuppressWarnings("unchecked")
     private void initComponents() {
         stringFieldComponent = new FlStringField();

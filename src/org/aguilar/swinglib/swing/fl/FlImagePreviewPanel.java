@@ -26,10 +26,15 @@ public class FlImagePreviewPanel extends javax.swing.JPanel {
 
     private BufferedImage image;
     private BufferedImage scaledImage;
+    private int[] maxDimension = new int[2];
 
     /** Creates new form FlImagePreviewPanel */
     public FlImagePreviewPanel() {
         super();
+    }
+    public void setMaxDimension(int width, int height) {
+        maxDimension[0] = width;
+        maxDimension[1] = height;
     }
     public void setImage(String imagePath) {
         try {
@@ -44,8 +49,9 @@ public class FlImagePreviewPanel extends javax.swing.JPanel {
     }
     private double getScale(int imageWidth, int imageHeight) {
         double ratio = Math.min((double)getHeight() / (double)imageHeight, (double)getWidth() / (double)imageWidth);
-        if (ratio > 1D)
+        if (ratio > 1D) {
             ratio = 1D;
+        }
         return ratio;
     }
     @Override

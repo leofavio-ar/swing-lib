@@ -22,11 +22,13 @@ public class TreeEntry extends DefaultMutableTreeNode {
     private ArrayList<Map> mHijos;
     private TreeEntry padre;
     private Map contenido;
+    private boolean seleccionado;
 
     public TreeEntry() {
         super();
         this.lHijos = new ArrayList<>();
         this.mHijos = new ArrayList<>();
+        this.seleccionado = false;
     }
     public TreeEntry(Map content, String dataField, String iconURL, TreeEntry parent) {
         this();
@@ -56,6 +58,9 @@ public class TreeEntry extends DefaultMutableTreeNode {
             System.err.println(ex.getMessage());
         }
     }
+    private void setSeleccionado(boolean seleccionado) {
+        this.seleccionado = seleccionado;
+    }
     public Map getContenido() {
         return contenido;
     }
@@ -73,6 +78,9 @@ public class TreeEntry extends DefaultMutableTreeNode {
     }
     public ArrayList<Map> getMHijos() {
         return mHijos;
+    }
+    public boolean isSeleccionado() {
+        return seleccionado;
     }
     @Override
     public int getLevel() {
@@ -124,6 +132,10 @@ public class TreeEntry extends DefaultMutableTreeNode {
     public void remove(int index) {
         TreeEntry child = (TreeEntry)lHijos.remove(index);
         child.setParent(null);
+    }
+    @Override
+    public String toString() {
+        return titulo;
     }
 
 }

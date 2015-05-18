@@ -33,6 +33,9 @@ public class DateCellRenderer extends DefaultTableCellRenderer {
     public DateCellRenderer(String dateFormat) {
         this(null, DateCellRenderer.CENTER, dateFormat);
     }
+    public DateCellRenderer(int orientation, String dateFormat) {
+        this(null, orientation, dateFormat);
+    }
     public DateCellRenderer(Color color, String dateFormat) {
         this(color, DateCellRenderer.CENTER, dateFormat);
     }

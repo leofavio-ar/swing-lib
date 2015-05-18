@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
 import org.aguilar.swinglib.swing.misc.TreeEntry;
 
 /**
@@ -34,8 +35,11 @@ public class IconTreeRenderer extends DefaultTreeCellRenderer {
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         te = (TreeEntry)value;
         label.setIcon(te.getIcono());
+        TreePath path = new TreePath(te);
+        boolean seleccionado = sel ? true : 
+                tree.getSelectionModel().getSelectionPath() == null ? sel : tree.getSelectionModel().getSelectionPath().equals(path);
 //        label.setFont(orgFont);
-        if (sel) {
+        if (seleccionado) {
             label.setBorder(UIManager.getBorder("Tree.selectionBorderColor"));
             label.setOpaque(true);
 //            label.setFont(boldFont);

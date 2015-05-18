@@ -123,6 +123,12 @@ public class FlTable extends JTable {
             }
         });
     }
+    public void setResizingAllowed(boolean resizingAllowed) {
+        getTableHeader().setResizingAllowed(resizingAllowed);
+    }
+    public boolean isResizingAllowed() {
+        return getTableHeader().getResizingAllowed();
+    }
 //    @Override
 //    public boolean isCellEditable(int i, int i1) {
 //        return editable.get(i)[i1];
@@ -360,7 +366,7 @@ public class FlTable extends JTable {
         if (dataProvider == null) {
             throw new NullPointerException("El proveedor de datos no ha sido inicializado");
         }
-        return dataProvider.get(convertRowIndexToModel(getSelectedRow()));
+        return getSelectedRow() == -1 ? null : dataProvider.get(convertRowIndexToModel(getSelectedRow()));
     }
     public List<Map> getSelectedMaps() {
         List<Map> selectedRows = new ArrayList<>();
